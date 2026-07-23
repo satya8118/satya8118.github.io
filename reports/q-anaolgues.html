@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>q-Analogues: A Bridge Between Algebra and Combinatorics</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">q-Analogues: A Bridge Between Algebra and
+Combinatorics</h1>
+</header>
+<div class="defbox">
+<p>A <span class="math inline">\(q\)</span>-analog is a deformation of a
+classical combinatorial or algebraic object that introduces a parameter
+<span class="math inline">\(q\)</span> in such a way that setting <span
+class="math inline">\(q=1\)</span> recovers the original result. The
+variable <span class="math inline">\(q\)</span> typically records
+additional structural information, such as the number of inversions, the
+area under a lattice path, or the major index of a permutation, that is
+invisible in the classical count.</p>
+</div>
+<p>As Richard Askey famously warned, the study of <span
+class="math inline">\(q\)</span>-analogs can become a “<span
+class="math inline">\(q\)</span>-disease,” so compelling are the
+connections one discovers. This report develops the theory across six
+sections: the basic framework of <span
+class="math inline">\(q\)</span>-analogs and inversions, <span
+class="math inline">\(q\)</span>-binomial coefficients and their
+combinatorial interpretations, <span
+class="math inline">\(q\)</span>-Catalan numbers via Dyck paths, the
+linear-algebraic meaning over finite fields, the theory of <span
+class="math inline">\(q\)</span>-determinants, and a unified perspective
+tying everything together.</p>
+<h1 id="q-analogs-and-inversions"><span
+class="math inline">\(q\)</span>-Analogs and Inversions</h1>
+<p>The central idea of <span class="math inline">\(q\)</span>-analysis
+is to replace the question “How many?” with “How are these objects
+distributed?” by assigning polynomial weights to combinatorial
+structures. The most natural such weight arises from counting
+inversions.</p>
+<div class="defbox">
+<p>For a permutation <span class="math inline">\(\sigma\)</span> of
+<span class="math inline">\(\{1,2,\dots,n\}\)</span>, an
+<strong>inversion</strong> is a pair of values <span
+class="math inline">\((\sigma(i),\sigma(j))\)</span> with <span
+class="math inline">\(i&lt;j\)</span> and <span
+class="math inline">\(\sigma(i)&gt;\sigma(j)\)</span>.</p>
+</div>
+<p>For example: the permutations of <span
+class="math inline">\(\{1,2,3\}\)</span> are</p>
+<div class="center">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">permutation</th>
+<th style="text-align: center;">inversions</th>
+<th style="text-align: center;"> inversions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline">\(123\)</span></td>
+<td style="text-align: center;">–</td>
+<td style="text-align: center;"><span
+class="math inline">\(0,1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span
+class="math inline">\(132\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(32\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1,q\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline">\(213\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(21\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1,q\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span
+class="math inline">\(231\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(21,31\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(2,q^2\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline">\(312\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(31,32\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(2,q^2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span
+class="math inline">\(321\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(32,31,21\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(3,q^3\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The permutation <span class="math inline">\((123\cdots n)\)</span>
+has zero inversions (the minimum), while the reverse permutation <span
+class="math inline">\((n\cdots 321)\)</span> has <span
+class="math inline">\(\binom{n}{2}\)</span> inversions (the maximum).
+For every permutation there exists a reverse permutation such that the
+sum of total inversions for the permutation and its reverse equals <span
+class="math inline">\(\binom{n}{2}\)</span>.</p>
+<p>The inversion polynomial encodes the distribution of inversions over
+all permutations: <span class="math display">\[\sum_{\sigma\in[n]}
+q^{\operatorname{inv}(\sigma)}.\]</span> For <span
+class="math inline">\(n=3\)</span>, one finds <span
+class="math inline">\(1+2q+2q^2+q^3 = (1+q)(1+q+q^2)\)</span>.</p>
+<div class="exbox">
+<p>Let <span class="math inline">\(S\)</span> be the set of all
+permutations of <span class="math inline">\(\{1,2,3\}\)</span>. We know
+that <span class="math inline">\(S=\{123,132,213,231,312,321\}\)</span>.
+Counting inversions, we conclude that <span
+class="math display">\[G_{S,\operatorname{inv}}(q) =
+q^0+q^1+q^1+q^2+q^2+q^3
+= 1+2q+2q^2+q^3 = (1+q)(1+q+q^2).\]</span> Note that <span
+class="math inline">\(G_S(1)=6=3!=|S|\)</span>. Similarly, if <span
+class="math inline">\(T\)</span> is the set of all permutations of <span
+class="math inline">\(\{1,2,3,4\}\)</span>, a longer calculation leads
+to <span class="math display">\[G_{T,\operatorname{inv}}(q) =
+1+3q+5q^2+6q^3+5q^4+3q^5+q^6
+= (1)(1+q)(1+q+q^2)(1+q+q^2+q^3).\]</span></p>
+</div>
+<div class="exbox">
+<p>Let <span class="math inline">\(S=\mathcal{R}(0^2 1^3)\)</span> be
+the set of all rearrangements of two <span
+class="math inline">\(0\)</span>’s and three <span
+class="math inline">\(1\)</span>’s. We know that <span
+class="math display">\[S=\{00111,\,01011,\,01101,\,01110,\,10011,\,10101,\,10110,\,11001,\,11010,\,11100\}.\]</span>
+Counting inversions, we conclude that <span
+class="math display">\[G_{S,\operatorname{inv}}(q) =
+q^0+q^1+q^2+q^3+q^3+q^4+q^4+q^5+q^5+q^6
+= 1+q+2q^2+2q^3+2q^4+q^5+q^6.\]</span></p>
+</div>
+<div class="thmbox">
+<p>The inversion polynomial factors as a product of <span
+class="math inline">\(q\)</span>-integers: <span
+class="math display">\[\sum_{\sigma\in[n]}
+q^{\operatorname{inv}(\sigma)} = [1]_q[2]_q\cdots[n]_q.\]</span> The
+proof proceeds by induction: inserting the element <span
+class="math inline">\(n+1\)</span> into position <span
+class="math inline">\(k\)</span> of a permutation of <span
+class="math inline">\([n]\)</span> creates <span
+class="math inline">\(n+1-k\)</span> new inversions, and summing over
+all insertion positions yields the recurrence <span
+class="math display">\[\sum_{\pi\in S_{n+1}} q^{\operatorname{inv}(\pi)}
+= (1+q+\cdots+q^n)\sum_{\sigma\in[n]}
+q^{\operatorname{inv}(\sigma)}.\]</span></p>
+</div>
+<div class="defbox">
+<p>This motivates the fundamental definitions. The <span
+class="math inline">\(q\)</span>-analogue of an integer <span
+class="math inline">\(n\)</span> is <span class="math display">\[[n]_q =
+1+q+q^2+\cdots+q^{n-1},\]</span> and the <span
+class="math inline">\(q\)</span>-factorial is <span
+class="math inline">\([n]!_q=[1]_q[2]_q\cdots[n]_q\)</span> (for <span
+class="math inline">\(q\neq1\)</span>, <span
+class="math inline">\([n]_q=\tfrac{1-q^n}{1-q}\)</span>). The limit
+<span class="math inline">\(\lim_{q\to1}[n]_q=n\)</span>. A factorial
+tells us how many different arrangements exist; a <span
+class="math inline">\(q\)</span>-factorial helps us comment on the
+distribution of those arrangements on a larger scale, highlighting the
+mechanics of the underlying system.</p>
+</div>
+<div class="thmbox">
+<p><span class="math display">\[\sum_{\sigma\in\Pi(n)}
+q^{\operatorname{inv}(\sigma)} = n!_q,\]</span> establishing the <span
+class="math inline">\(q\)</span>-factorial as the generating function
+for inversions.</p>
+</div>
+<p>The concept of inversions extends naturally to words over any ordered
+alphabet. For binary words of <span class="math inline">\(k\)</span>
+zeros and <span class="math inline">\(n-k\)</span> ones, a generalized
+inversion is an occurrence of a <span class="math inline">\(1\)</span>
+preceding a <span class="math inline">\(0\)</span>. This yields the same
+structure but with a different generating function, leading directly to
+<span class="math inline">\(q\)</span>-binomial coefficients.</p>
+<h1 id="q-binomial-coefficients"><span
+class="math inline">\(q\)</span>-Binomial Coefficients</h1>
+<div class="defbox">
+<p>The <span class="math inline">\(q\)</span>-binomial coefficient (also
+called the Gaussian polynomial) is defined algebraically as <span
+class="math display">\[\binom{n}{k}_q =
+\frac{[n]_q!}{[k]_q![n-k]_q!}.\]</span> Though the definition appears to
+be only a rational function, the <span
+class="math inline">\(q\)</span>-binomial coefficient is in fact a
+polynomial in <span class="math inline">\(q\)</span> of degree <span
+class="math inline">\(k(n-k)\)</span>.</p>
+</div>
+<div class="thmbox">
+<p>If <span class="math inline">\(W(n,k)\)</span> is the set of all
+<span class="math inline">\(n\)</span>-bit binary sequences with <span
+class="math inline">\(k\)</span> zeros, then <span
+class="math display">\[\binom{n}{k}_q = \sum_{\sigma\in W(n,k)}
+q^{\operatorname{inv}(\sigma)}.\]</span></p>
+</div>
+<p>For example, <span class="math inline">\(\binom{4}{2}_q =
+1+q+2q^2+q^3+q^4\)</span>,</p>
+<table>
+<caption>Permutations of two 0’s and two 1’s with their inversion
+counts.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Permutation</th>
+<th style="text-align: center;">Inversions (inv)</th>
+<th style="text-align: center;"><span
+class="math inline">\(q^{\text{inv}}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline">\(0\,0\,1\,1\)</span></td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;"><span
+class="math inline">\(q^0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span
+class="math inline">\(0\,1\,0\,1\)</span></td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><span
+class="math inline">\(q^1\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline">\(0\,1\,1\,0\)</span></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><span
+class="math inline">\(q^2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span
+class="math inline">\(1\,0\,0\,1\)</span></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><span
+class="math inline">\(q^2\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline">\(1\,0\,1\,0\)</span></td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;"><span
+class="math inline">\(q^3\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span
+class="math inline">\(1\,1\,0\,0\)</span></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;"><span
+class="math inline">\(q^4\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="tcolorbox">
+<p><span class="math display">\[\sum_{\pi} q^{\text{inv}(\pi)} = 1 + q +
+2q^2 + q^3 + q^4 = \binom{4}{2}_q\]</span> <span
+class="math display">\[\begin{aligned}
+\sum_{\sigma} q^{\mathrm{inv}(\sigma)}
+  &amp;= 1 + q + 2q^2 + q^3 + q^4 \\[4pt]
+  &amp;= (1 + q + q^2)(1 + q^2) \\[4pt]
+  &amp;= [3]_q \, \frac{(1+q)(1+q^2)}{1+q} \\[4pt]
+  &amp;= [3]_q \, \frac{[4]_q}{[2]_q} \\[4pt]
+  &amp;= \frac{[4]_q [3]_q [2]_q
+[1]_q}{\big([2]_q[1]_q\big)\big([2]_q[1]_q\big)} \\[4pt]
+  &amp;= \frac{[4]_q!}{[2]_q! \, [2]_q!} = \binom{4}{2}_q.
+\end{aligned}\]</span></p>
+</div>
+<p>which factors as <span
+class="math inline">\([3]_q\cdot[4]_q/[2]_q\)</span>. The proof proceeds
+by verifying that both sides satisfy the same <span
+class="math inline">\(q\)</span>-Pascal recurrence.</p>
+<div class="propbox">
+<p>There are in fact two such recurrences: <span
+class="math display">\[\binom{n+1}{k}_q = \binom{n}{k-1}_q +
+q^{n+1-k}\binom{n}{k}_q
+\qquad\text{and}\qquad
+\binom{n+1}{k}_q = q^{k}\binom{n}{k}_q + \binom{n}{k-1}_q,\]</span> both
+of which reduce at <span class="math inline">\(q=1\)</span> to the
+ordinary Pascal identity.</p>
+</div>
+<p>The Fundamental Property has several equivalent reformulations. By
+identifying binary words with lattice paths from <span
+class="math inline">\((0,0)\)</span> to <span
+class="math inline">\((k,n-k)\)</span>, the number of inversions equals
+the area between the path and the <span
+class="math inline">\(x\)</span>-axis.</p>
+<div class="thmbox">
+<p><span class="math display">\[\binom{n}{k}_q =
+\sum_{\lambda\in(k,n-k)} q^{a(\lambda)},\]</span> where <span
+class="math inline">\(a(\lambda)\)</span> denotes the area under the
+path.</p>
+</div>
+<p>For eg. let us consider W(4,2) and convert the 0 and 1 to N and E
+then</p>
+<div class="center">
+
+</div>
+<p>A third interpretation involves integer partitions: <span
+class="math inline">\(\binom{n}{k}_q\)</span> is the generating function
+for partitions whose Young diagrams fit inside a <span
+class="math inline">\(k\times(n-k)\)</span> box.</p>
+<p>The symmetry <span
+class="math inline">\(\binom{n}{k}_q=\binom{n}{n-k}_q\)</span> and the
+palindromic property of the coefficients <span
+class="math inline">\(c_{n,k,a}=c_{n,k,k(n-k)-a}\)</span> (the
+coefficients read the same from both ends) follow from this identity:
+<span class="math inline">\(\binom{n}{k}_{1/q}
+= q^{-k(n-k)}\binom{n}{k}_q\)</span>.</p>
+<div class="thmbox">
+<p><span class="math display">\[\prod_{i=0}^{n-1}(1+xq^i) =
+\sum_{i=0}^{n} q^{i(i-1)/2}\binom{n}{i}_q x^i.\]</span> The proof uses a
+functional equation technique: setting <span
+class="math inline">\(E_n(x)=\prod_{i=0}^{n-1}(1+xq^i)\)</span>, one
+derives <span class="math inline">\(E_n(x)=(1+xq^n)E_{n-1}(xq)\)</span>
+and extracts coefficients inductively. Setting <span
+class="math inline">\(q=1\)</span> recovers the classical binomial
+theorem.</p>
+</div>
+<p>Noncommutative algebra (noncommutative meaning <span
+class="math inline">\(xy\)</span> is not equal to <span
+class="math inline">\(yx\)</span>) provides a striking perspective on
+these results. If <span class="math inline">\(yx=qxy\)</span>, then
+expanding <span class="math inline">\((x+y)^n\)</span> and moving all
+<span class="math inline">\(y\)</span>’s past all <span
+class="math inline">\(x\)</span>’s (picking up a factor of <span
+class="math inline">\(q\)</span> for each passage) produces the
+following theorem.</p>
+<div class="thmbox">
+<p><span class="math display">\[(x+y)^n = \sum_{k=0}^{n}\binom{n}{k}_q
+x^k y^{n-k}.\]</span></p>
+</div>
+<div class="example*">
+<p><strong>Example 1</strong>. <em>Let <span
+class="math inline">\(S=\mathcal{R}(a^1b^1c^2)\)</span>, where we use
+<span class="math inline">\(a&lt;b&lt;c\)</span> as the ordering of the
+alphabet. We know that <span
+class="math display">\[S=\{abcc,\,acbc,\,accb,\,bacc,\,bcac,\,bcca,\,cabc,\,cacb,\,cbac,\,cbca,\,ccab,\,ccba\}.\]</span>
+Counting inversions leads to <span
+class="math display">\[G_{S,\operatorname{inv}}(q) =
+1+2q+3q^2+3q^3+2q^4+q^5.\]</span> Now let <span
+class="math inline">\(s=\mathcal{R}(a^1b^2c^1)\)</span> and <span
+class="math inline">\(r=\mathcal{R}(a^2b^1c^1)\)</span> and <span
+class="math inline">\(t=\mathcal{R}(a^2b^1c^1)\)</span> with the same
+ordering of the alphabet.</em></p>
+<div class="defbox">
+<p><em>For a word <span class="math inline">\(w = w_1 w_2 \cdots
+w_n\)</span> over the ordered alphabet <span class="math inline">\(a
+&lt; b &lt; c\)</span>, an <strong>inversion</strong> is a pair of
+positions <span class="math inline">\(i &lt; j\)</span> such that <span
+class="math inline">\(w_i &gt; w_j\)</span>. The <strong>inversion
+polynomial</strong> of a class of words is <span
+class="math display">\[I(q) \;=\; \sum_{w}
+q^{\operatorname{inv}(w)},\]</span> summed over all distinct
+arrangements of the multiset in question.</em></p>
+</div>
+<p><em>Each of the multisets <span
+class="math inline">\(\{a,a,b,c\}\)</span>, <span
+class="math inline">\(\{a,b,b,c\}\)</span>, <span
+class="math inline">\(\{a,b,c,c\}\)</span> has <span
+class="math display">\[\frac{4!}{2!\,1!\,1!} = 12\]</span> distinct
+arrangements, so each inversion polynomial has coefficients summing to
+<span class="math inline">\(12\)</span>.</em></p>
+<h1 class="unnumbered" id="ra2b1c1-multiset-aabc"><span
+class="math inline">\(r(a^2b^1c^1)\)</span>: multiset <span
+class="math inline">\(\{a,a,b,c\}\)</span></h1>
+<div class="center">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><em>word</em></th>
+<th style="text-align: center;"><em>inv</em></th>
+<th style="text-align: center;"><em>word</em></th>
+<th style="text-align: center;"><em>inv</em></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><em>aabc</em></td>
+<td style="text-align: center;"><em>0</em></td>
+<td style="text-align: center;"><em>caba</em></td>
+<td style="text-align: center;"><em>4</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>abac</em></td>
+<td style="text-align: center;"><em>1</em></td>
+<td style="text-align: center;"><em>acba</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><em>aacb</em></td>
+<td style="text-align: center;"><em>1</em></td>
+<td style="text-align: center;"><em>caab</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>abca</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>baca</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><em>acab</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>bcaa</em></td>
+<td style="text-align: center;"><em>4</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>baac</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>cbaa</em></td>
+<td style="text-align: center;"><em>5</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><em><span class="math display">\[I_r(q) = 1 + 2q + 3q^2 + 3q^3 + 2q^4
++ q^5.\]</span></em></p>
+<h1 class="unnumbered" id="sa1b2c1-multiset-abbc"><span
+class="math inline">\(s(a^1b^2c^1)\)</span>: multiset <span
+class="math inline">\(\{a,b,b,c\}\)</span></h1>
+<div class="center">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><em>word</em></th>
+<th style="text-align: center;"><em>inv</em></th>
+<th style="text-align: center;"><em>word</em></th>
+<th style="text-align: center;"><em>inv</em></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><em>abbc</em></td>
+<td style="text-align: center;"><em>0</em></td>
+<td style="text-align: center;"><em>cbab</em></td>
+<td style="text-align: center;"><em>4</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>abcb</em></td>
+<td style="text-align: center;"><em>1</em></td>
+<td style="text-align: center;"><em>bcab</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><em>babc</em></td>
+<td style="text-align: center;"><em>1</em></td>
+<td style="text-align: center;"><em>bbca</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>acbb</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>cabb</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><em>bacb</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>bcba</em></td>
+<td style="text-align: center;"><em>4</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>bbac</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>cbba</em></td>
+<td style="text-align: center;"><em>5</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><em><span class="math display">\[I_s(q) = 1 + 2q + 3q^2 + 3q^3 + 2q^4
++ q^5.\]</span></em></p>
+<h1 class="unnumbered" id="ta1b1c2-multiset-abcc"><span
+class="math inline">\(t(a^1b^1c^2)\)</span>: multiset <span
+class="math inline">\(\{a,b,c,c\}\)</span></h1>
+<div class="center">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><em>word</em></th>
+<th style="text-align: center;"><em>inv</em></th>
+<th style="text-align: center;"><em>word</em></th>
+<th style="text-align: center;"><em>inv</em></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><em>abcc</em></td>
+<td style="text-align: center;"><em>0</em></td>
+<td style="text-align: center;"><em>cbac</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>acbc</em></td>
+<td style="text-align: center;"><em>1</em></td>
+<td style="text-align: center;"><em>bcca</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><em>bacc</em></td>
+<td style="text-align: center;"><em>1</em></td>
+<td style="text-align: center;"><em>ccab</em></td>
+<td style="text-align: center;"><em>4</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>accb</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>cbca</em></td>
+<td style="text-align: center;"><em>4</em></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><em>cabc</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>ccba</em></td>
+<td style="text-align: center;"><em>5</em></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><em>bcac</em></td>
+<td style="text-align: center;"><em>2</em></td>
+<td style="text-align: center;"><em>cacb</em></td>
+<td style="text-align: center;"><em>3</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><em><span class="math display">\[I_t(q) = 1 + 2q + 3q^2 + 3q^3 + 2q^4
++ q^5.\]</span></em></p>
+<h1 class="unnumbered" id="observation">Observation</h1>
+<p><em>All three inversion polynomials coincide: <span
+class="math display">\[I_r(q) = I_s(q) = I_t(q) = 1 + 2q + 3q^2 + 3q^3 +
+2q^4 + q^5.\]</span></em></p>
+<div class="keybox">
+<p><em>This is not a coincidence. The inversion-generating function for
+arrangements of a multiset depends only on the <em>sizes</em> of the
+repeated-letter classes — here <span
+class="math inline">\((2,1,1)\)</span> — not on which letter is doubled.
+This reminds us of the form of the multinomial coefficient, which does
+not depend on the ordering of same-sized species but only on the number
+of species — so we already have some idea of what the form should look
+like.</em></p>
+</div>
+<p><em>In fact this polynomial is exactly the <span
+class="math inline">\(q\)</span>-multinomial coefficient.</em></p>
+<div class="defbox">
+<p><em><span class="math display">\[\binom{4}{2,1,1}_q
+= \frac{[4]_q!}{[2]_q!\,[1]_q!\,[1]_q!}
+= (1+q+q^2)(1+q+q^2+q^3)
+= 1 + 2q + 3q^2 + 3q^3 + 2q^4 + q^5,\]</span> where <span
+class="math inline">\([n]_q! =
+\prod_{k=1}^{n}(1+q+\cdots+q^{k-1})\)</span>.</em></p>
+</div>
+<p><em>Evaluating at <span class="math inline">\(q=1\)</span> gives
+<span class="math inline">\(12\)</span> in each case, matching the total
+word count, and each polynomial is palindromic, <span
+class="math inline">\(I(q) = q^{5} I(1/q)\)</span>, reflecting the
+symmetry between a word and its reverse under the reversal of the
+alphabet order.</em></p>
+</div>
+<p>The generalization to multisets gives <span
+class="math inline">\(q\)</span>-multinomial coefficients <span
+class="math inline">\(\binom{n}{k_1,\dots,k_m}_q\)</span>. For a
+two-letter alphabet, these specialize to <span
+class="math inline">\(q\)</span>-binomial coefficients; for <span
+class="math inline">\(k_1=\cdots=k_m=1\)</span>, they reduce to the
+<span class="math inline">\(q\)</span>-factorial.</p>
+<div class="thmbox">
+<p><span class="math display">\[\sum_{w}
+q^{\operatorname{inv}(w)}(n_1,\dots,n_k)
+= \frac{[n_1+\cdots+n_k]_q!}{[n_1]_q!\cdots[n_k]_q!}.\]</span> The proof
+splits inversions into those involving copies of the same letter versus
+those between different letters, and proceeds by induction.</p>
+</div>
+<h1 id="counting-dyck-paths-with-q-analogs">Counting Dyck Paths with
+<span class="math inline">\(q\)</span>-Analogs</h1>
+<div class="defbox">
+<p>A Dyck path of length <span class="math inline">\(2n\)</span> is a
+lattice path from <span class="math inline">\((0,0)\)</span> to <span
+class="math inline">\((n,n)\)</span> using North and East steps that
+never dips below the main diagonal <span
+class="math inline">\(y=x\)</span>. The total number of such paths is
+the Catalan number <span class="math display">\[C_n =
+\frac{1}{n+1}\binom{2n}{n}.\]</span> The natural <span
+class="math inline">\(q\)</span>-analog tracks the area between the path
+and the diagonal.</p>
+</div>
+<div class="defbox">
+<p><span class="math display">\[C_n(q) = \sum_{P\in\mathcal{D}_n}
+q^{a(P)},\]</span> where <span class="math inline">\(a(P)\)</span> is
+the number of complete unit squares between <span
+class="math inline">\(P\)</span> and <span
+class="math inline">\(y=x\)</span>. For example, <span
+class="math inline">\(C_3(q)=1+2q+q^2+q^3\)</span>, and setting <span
+class="math inline">\(q=1\)</span> recovers <span
+class="math inline">\(C_3=5\)</span>.</p>
+</div>
+<p>Several structural properties follow directly from the definition:
+the constant term is always <span class="math inline">\(1\)</span> (only
+the alternating path <span class="math inline">\(NENENE\cdots\)</span>
+has zero area between it and the diagonal), the leading coefficient is
+<span class="math inline">\(1\)</span> with degree <span
+class="math inline">\(\binom{n}{2}\)</span> (the path <span
+class="math inline">\(NN\cdots NEE\cdots E\)</span> encloses a staircase
+shape), and the coefficient of <span class="math inline">\(q\)</span> is
+<span class="math inline">\(n-1\)</span>.</p>
+<div class="keybox">
+<p>Because it can create a “bump” from the diagonal line so as to create
+an area of <span class="math inline">\(1\)</span> over the diagonal, but
+this can be done only up to joint <span
+class="math inline">\(n-1\)</span>, as the “bump” on the last joint is
+not possible.</p>
+</div>
+<div class="center">
+
+</div>
+<p>The Carlitz <span class="math inline">\(q\)</span>-Catalan numbers
+satisfy a natural recurrence generalizing the classical Catalan
+recursion. Just as <span
+class="math inline">\(C_{n+1}=\sum_{k=0}^{n}C_kC_{n-k}\)</span>, one has
+the following.</p>
+<div class="thmbox">
+<p><span class="math display">\[C_{n+1}(q) = \sum_{k=0}^{n} q^{k} C_k(q)
+C_{n-k}(q).\]</span> The proof decomposes a path <span
+class="math inline">\(P\in\mathcal{D}_{n+1}\)</span> at its first return
+to the diagonal, say at <span class="math inline">\((k+1,k+1)\)</span>,
+writing <span class="math inline">\(P=NP_1EP_2\)</span> where <span
+class="math inline">\(P_1\in\mathcal{D}_k\)</span> and <span
+class="math inline">\(P_2\in\mathcal{D}_{n-k}\)</span>. The lifting of
+<span class="math inline">\(P_1\)</span> creates <span
+class="math inline">\(k\)</span> extra squares, hence <span
+class="math inline">\(a(P)=a(P_1)+a(P_2)+k\)</span>.</p>
+</div>
+<div class="center">
+
+</div>
+<p>The Carlitz polynomial does not factor into <span
+class="math inline">\(q\)</span>-integers. An alternative <span
+class="math inline">\(q\)</span>-Catalan number that does is the
+MacMahon <span class="math inline">\(q\)</span>-Catalan polynomial.</p>
+<div class="defbox">
+<p><span class="math display">\[C_n^{\mathrm{Mac}}(q) =
+\frac{1}{[n+1]_q}\binom{2n}{n}_q.\]</span> That this is even a
+polynomial is not obvious from the algebraic definition; it is
+guaranteed by the combinatorial interpretation via the major index. For
+a Dyck path, a <strong>valley</strong> is an occurrence of the subword
+<span class="math inline">\(EN\)</span>, and the <strong>major
+index</strong> is the sum of the positions of the <span
+class="math inline">\(E\)</span> in each valley.</p>
+</div>
+<div class="thmbox">
+<p><span class="math display">\[\frac{1}{[n+1]_q}\binom{2n}{n}_q =
+\sum_{P\in\mathcal{D}_n} q^{\operatorname{maj}(P)}.\]</span></p>
+</div>
+<p>The duality between area (which satisfies a beautiful recurrence) and
+major index (which admits a beautiful algebraic formula) is a recurring
+theme in algebraic combinatorics.</p>
+<p>Example for W(6,3) does the identity above work</p>
+<div class="center">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Path</strong></th>
+<th style="text-align: left;"><strong>Valleys (<span
+class="math inline">\(EN\)</span>)</strong></th>
+<th style="text-align: left;"><strong>Positions of <span
+class="math inline">\(E\)</span> in valleys</strong></th>
+<th style="text-align: left;"><span
+class="math inline">\(\mathrm{maj}(P)\)</span></th>
+<th style="text-align: left;"><span
+class="math inline">\(q^{\mathrm{maj}(P)}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span
+class="math inline">\((NNNEEE)\)</span></td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;"><span
+class="math inline">\(q^0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span
+class="math inline">\((NENNEE)\)</span></td>
+<td style="text-align: left;">1st step <span
+class="math inline">\(E\)</span>, 2nd step <span
+class="math inline">\(N\)</span></td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;"><span
+class="math inline">\(q^2\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span
+class="math inline">\((NNENEE)\)</span></td>
+<td style="text-align: left;">3rd step <span
+class="math inline">\(E\)</span>, 4th step <span
+class="math inline">\(N\)</span></td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;"><span
+class="math inline">\(q^3\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span
+class="math inline">\((NNEENE)\)</span></td>
+<td style="text-align: left;">4th step <span
+class="math inline">\(E\)</span>, 5th step <span
+class="math inline">\(N\)</span></td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;"><span
+class="math inline">\(q^4\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span
+class="math inline">\((NENENE)\)</span></td>
+<td style="text-align: left;">Valleys at pos 2 and 4</td>
+<td style="text-align: left;">2 and 4</td>
+<td style="text-align: left;"><span
+class="math inline">\(2+4=6\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(q^6\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Summing these up gives the <strong>major index polynomial</strong>
+<span class="math display">\[\sum_{P \in \mathcal{D}_3}
+q^{\mathrm{maj}(P)} = 1 + q^2 + q^3 + q^4 + q^6.\]</span></p>
+<p>One can immediately see that this is not <span
+class="math inline">\(C_3(q)\)</span> which we saw in the previous
+subsection.</p>
+<p>Let us verify this against MacMahon’s algebraic definition for <span
+class="math inline">\(n=3\)</span>: <span
+class="math display">\[\begin{aligned}
+\frac{1}{[4]_q}\binom{6}{3}_q
+  &amp;= \frac{[6]_q[5]_q[4]_q}{[4]_q[3]_q[2]_q[1]_q}
+   = \frac{(1+q+q^2+q^3+q^4+q^5)(1+q+q^2+q^3+q^4)}{(1+q+q^2)(1+q)}
+\\[6pt]
+  &amp;= \frac{(1+q)(1+q+q^2)(1-q+q^2)(1+q+q^2+q^3+q^4)}{(1+q+q^2)(1+q)}
+\\[6pt]
+  &amp;= (1-q+q^2)(1+q+q^2+q^3+q^4) \\[6pt]
+  &amp;= 1 + q^2 + q^3 + q^4 + q^6.
+\end{aligned}\]</span></p>
+<p>From the itself we can can conclude that the necessary element for
+the bounce is not the existence of N and E both the elements EN So this
+gives us insight on how the idea for bounce and valleys are
+equivalent</p>
+<div class="defbox">
+<p>Haglund discovered the <strong>bounce statistic</strong> on Dyck
+paths, where a ball bounces from the top-right corner off the path and
+the diagonal.</p>
+</div>
+<div class="thmbox">
+<p>Remarkably, the bivariate polynomial <span
+class="math display">\[C_n(q,t) = \sum_{P\in\mathcal{D}_n}
+q^{a(P)}t^{\operatorname{bounce}(P)}\]</span> is symmetric in <span
+class="math inline">\(q\)</span> and <span
+class="math inline">\(t\)</span>, a fact deeply non-obvious from the
+definitions.</p>
+</div>
+<h1 id="linear-algebra-and-finite-fields">Linear Algebra and Finite
+Fields</h1>
+<p>The theory of <span class="math inline">\(q\)</span>-analogues
+acquires its deepest combinatorial meaning when <span
+class="math inline">\(q\)</span> is a prime power. For every prime power
+<span class="math inline">\(q=p^{\alpha}\)</span>, there exists a unique
+finite field <span class="math inline">\(GF(q)\)</span> with <span
+class="math inline">\(q\)</span> elements. An <span
+class="math inline">\(n\)</span>-dimensional linear space <span
+class="math inline">\(V\)</span> over <span
+class="math inline">\(GF(q)\)</span> has exactly <span
+class="math inline">\(q^n\)</span> elements, since every vector can be
+uniquely written as <span
+class="math inline">\(\gamma_1\mathbf{b}_1+\cdots+\gamma_n\mathbf{b}_n\)</span>
+for a fixed basis <span
+class="math inline">\(\mathbf{b}_1,\dots,\mathbf{b}_n\)</span>, and
+there are <span class="math inline">\(q\)</span> choices for each <span
+class="math inline">\(\gamma_i\)</span>.</p>
+<h2 id="counting-ordered-bases-then-dividing-by-overcounting">Counting
+ordered bases, then dividing by overcounting</h2>
+<div class="thmbox">
+<p>Let <span class="math inline">\(V=\mathbb{F}_q^n\)</span>. The number
+of ordered <span class="math inline">\(k\)</span>-tuples <span
+class="math inline">\((v_1,v_2,\dots,v_k)\)</span> of linearly
+independent vectors in <span class="math inline">\(V\)</span> is <span
+class="math display">\[(q^n-1)(q^n-q)(q^n-q^2)\cdots(q^n-q^{k-1}).\]</span></p>
+</div>
+<p>The count proceeds sequentially, choosing one vector at a time and
+ruling out everything already spanned:</p>
+<ul>
+<li><p>Pick <span class="math inline">\(v_1\)</span>: it must be
+nonzero. Since <span class="math inline">\(V\)</span> has <span
+class="math inline">\(q^n\)</span> vectors in total, there are <span
+class="math inline">\(q^n-1\)</span> choices.</p></li>
+<li><p>Pick <span class="math inline">\(v_2\)</span>: it must lie
+outside <span class="math inline">\(\operatorname{span}(v_1)\)</span>.
+Since <span class="math inline">\(\operatorname{span}(v_1)\)</span> has
+dimension <span class="math inline">\(1\)</span>, it contains exactly
+<span class="math inline">\(q^1\)</span> vectors, so there are <span
+class="math inline">\(q^n-q\)</span> choices.</p></li>
+<li><p>Pick <span class="math inline">\(v_3\)</span>: after choosing the
+independent vectors <span class="math inline">\(v_1,v_2\)</span>, their
+span has dimension <span class="math inline">\(2\)</span> and therefore
+contains exactly <span class="math inline">\(q^2\)</span> vectors, so
+there are <span class="math inline">\(q^n-q^2\)</span> choices for <span
+class="math inline">\(v_3\)</span>.</p></li>
+<li><p>In general, after choosing independent vectors <span
+class="math inline">\(v_1,\dots,v_{i-1}\)</span>, their span has
+dimension <span class="math inline">\(i-1\)</span> and therefore
+contains exactly <span class="math inline">\(q^{i-1}\)</span> vectors.
+Consequently the <span class="math inline">\(i\)</span>th vector <span
+class="math inline">\(v_i\)</span> has <span
+class="math inline">\(q^n-q^{i-1}\)</span> possible choices.</p></li>
+</ul>
+<p>By the multiplication principle, multiplying these choices together
+for <span class="math inline">\(i=1,\dots,k\)</span> gives the stated
+formula: the total number of ordered independent <span
+class="math inline">\(k\)</span>-tuples is <span
+class="math inline">\((q^n-1)(q^n-q)(q^n-q^2)\cdots(q^n-q^{k-1})\)</span>.</p>
+<div class="keybox">
+<p>The whole argument rests on a single structural fact: an <span
+class="math inline">\(r\)</span>-dimensional subspace of <span
+class="math inline">\(V=\mathbb{F}_q^n\)</span> contains exactly <span
+class="math inline">\(q^r\)</span> vectors, since every element of an
+<span class="math inline">\(r\)</span>-dimensional space over <span
+class="math inline">\(\mathbb{F}_q\)</span> is a <em>unique</em> linear
+combination of <span class="math inline">\(r\)</span> basis vectors with
+coefficients drawn from the <span class="math inline">\(q\)</span>
+elements of <span class="math inline">\(\mathbb{F}_q\)</span>. This is
+exactly why, at step <span class="math inline">\(i\)</span>, ruling out
+the span of the previously chosen <span
+class="math inline">\(i-1\)</span> independent vectors removes precisely
+<span class="math inline">\(q^{i-1}\)</span> vectors from consideration
+— no more, no fewer.</p>
+</div>
+<h2 id="the-subspace-counting-theorem-and-q-binomial-coefficients">The
+Subspace Counting Theorem and <span
+class="math inline">\(q\)</span>-Binomial Coefficients</h2>
+<p>The central result connecting finite field geometry to <span
+class="math inline">\(q\)</span>-combinatorics is:</p>
+<div class="thmbox">
+<p>An <span class="math inline">\(n\)</span>-dimensional linear space
+<span class="math inline">\(V\)</span> over <span
+class="math inline">\(GF(q)\)</span> has exactly <span
+class="math inline">\(\binom{n}{k}_q\)</span> <span
+class="math inline">\(k\)</span>-dimensional subspaces.</p>
+</div>
+<p>The proof uses the orbit–stabilizer method, applied to the natural
+action of the general linear group on independent tuples.</p>
+<div class="defbox">
+<p>Let <span class="math inline">\(GL(n,q)\)</span> denote the group of
+invertible <span class="math inline">\(n\times n\)</span> matrices over
+<span class="math inline">\(\mathbb{F}_q\)</span>. It acts on <span
+class="math inline">\(V=\mathbb{F}_q^n\)</span> by <span
+class="math inline">\(A\cdot v=Av\)</span>, and hence acts on the set
+<span class="math inline">\(X\)</span> of ordered linearly independent
+<span class="math inline">\(k\)</span>-tuples by <span
+class="math display">\[A\cdot(v_1,\dots,v_k) =
+(Av_1,\dots,Av_k).\]</span> By the counting theorem above, <span
+class="math inline">\(|X|=(q^n-1)(q^n-q)\cdots(q^n-q^{k-1})\)</span>.</p>
+</div>
+<p>Because every <span class="math inline">\(A\in GL(n,q)\)</span> is
+invertible, it carries independent tuples to independent tuples, so this
+action is well defined on <span class="math inline">\(X\)</span>. Each
+orbit of the action consists of <em>all</em> ordered bases of a fixed
+<span class="math inline">\(k\)</span>-dimensional subspace, so the
+orbits of <span class="math inline">\(X\)</span> are naturally
+identified with the <span class="math inline">\(k\)</span>-dimensional
+subspaces of <span class="math inline">\(V\)</span>.</p>
+<div class="thmbox">
+<p>Fix the standard ordered basis <span
+class="math inline">\((e_1,\dots,e_k)\)</span> of the coordinate
+subspace <span
+class="math inline">\(\operatorname{span}(e_1,\dots,e_k)\subseteq
+V\)</span>. Its stabilizer under the action of <span
+class="math inline">\(GL(n,q)\)</span> consists exactly of the block
+matrices <span class="math display">\[\begin{pmatrix} I_k &amp; * \\ 0
+&amp; B \end{pmatrix}, \qquad B\in GL(n-k,q),\]</span> where <span
+class="math inline">\(I_k\)</span> is the <span
+class="math inline">\(k\times k\)</span> identity matrix, the block
+<span class="math inline">\(*\)</span> is an arbitrary <span
+class="math inline">\(k\times(n-k)\)</span> matrix over <span
+class="math inline">\(\mathbb{F}_q\)</span>, and <span
+class="math inline">\(B\)</span> ranges over the invertible <span
+class="math inline">\((n-k)\times(n-k)\)</span> matrices. Hence the
+stabilizer has order <span
+class="math display">\[q^{k(n-k)}\,|GL(n-k,q)|.\]</span> By the
+Orbit–Stabilizer Theorem, <span class="math display">\[|\text{Orbit}|
+\;=\; \frac{|GL(n,q)|}{q^{k(n-k)}\,|GL(n-k,q)|} \;=\; |GL(k,q)|
+\;=\;(q^k-1)(q^k-q)\cdots(q^k-q^{k-1}),\]</span> so every orbit — that
+is, every <span class="math inline">\(k\)</span>-dimensional subspace —
+has exactly <span
+class="math inline">\((q^k-1)(q^k-q)\cdots(q^k-q^{k-1})\)</span> ordered
+bases.</p>
+</div>
+<p>Every <span class="math inline">\(k\)</span>-dimensional subspace is
+hit equally often by this counting process, so dividing the first count
+by the second gives the number of <span
+class="math inline">\(k\)</span>-dimensional subspaces — the <span
+class="math inline">\(q\)</span>-binomial coefficient (also called the
+Gaussian binomial coefficient): <span
+class="math display">\[\binom{n}{k}_q = \frac{[n]_q!}{[k]_q![n-k]_q!}
+=
+\frac{(q^n-1)(q^n-q)\cdots(q^n-q^{k-1})}{(q^k-1)(q^k-q)\cdots(q^k-q^{k-1})},\]</span>
+where <span class="math inline">\([n]_q=1+q+q^2+\cdots+q^{n-1}\)</span>
+is the <span class="math inline">\(q\)</span>-analogue of the integer
+<span class="math inline">\(n\)</span>, and <span
+class="math inline">\([n]_q!\)</span> is the <span
+class="math inline">\(q\)</span>-factorial. The key insight is that when
+<span class="math inline">\(q\to1\)</span>, the <span
+class="math inline">\(q\)</span>-binomial coefficient reduces to the
+ordinary binomial coefficient <span
+class="math inline">\(\binom{n}{k}\)</span>: <span
+class="math inline">\(k\)</span>-subsets of an <span
+class="math inline">\(n\)</span>-set are the “<span
+class="math inline">\(q=1\)</span> limit” of <span
+class="math inline">\(k\)</span>-dimensional subspaces of an <span
+class="math inline">\(n\)</span>-dimensional vector space.</p>
+<h2 id="detailed-example-counting-subspaces-over-gf2">Detailed Example:
+Counting Subspaces over <span class="math inline">\(GF(2)\)</span></h2>
+<div class="exbox">
+<p>Consider <span class="math inline">\(V=GF(2)^3\)</span>, a <span
+class="math inline">\(3\)</span>-dimensional space over the field with
+<span class="math inline">\(2\)</span> elements. We count the <span
+class="math inline">\(1\)</span>-dimensional subspaces (lines through
+the origin). There are <span class="math inline">\(2^3-1=7\)</span>
+nonzero vectors. Each <span class="math inline">\(1\)</span>-dimensional
+subspace contains exactly <span class="math inline">\(2^1-1=1\)</span>
+nonzero vector. Thus the number of <span
+class="math inline">\(1\)</span>-dimensional subspaces is <span
+class="math inline">\(7/1=7\)</span>.</p>
+<p>Using the <span class="math inline">\(q\)</span>-binomial coefficient
+formula: <span class="math display">\[\binom{3}{1}_2 =
+\frac{[3]_2!}{[1]_2![2]_2!} = \frac{(1+2)(1+2+4)}{1\cdot(1+2)}
+= \frac{3\cdot7}{1\cdot3} = 7.\]</span></p>
+<p>Explicitly, the <span class="math inline">\(7\)</span> nonzero
+vectors of <span class="math inline">\(GF(2)^3\)</span> are <span
+class="math inline">\((1,0,0),(0,1,0),(0,0,1),(1,1,0),(1,0,1),(0,1,1),(1,1,1)\)</span>.
+Over <span class="math inline">\(GF(2)\)</span>, each nonzero vector
+generates a distinct line (since <span class="math inline">\(\lambda
+v=v\)</span> for <span class="math inline">\(\lambda=1\)</span>, and
+<span class="math inline">\(\lambda=0\)</span> gives the zero vector).
+Hence each span contains exactly one nonzero vector, confirming the
+count of <span class="math inline">\(7\)</span>.</p>
+<p>For <span class="math inline">\(2\)</span>-dimensional subspaces, we
+use the symmetry <span
+class="math inline">\(\binom{3}{2}_2=\binom{3}{1}_2=7\)</span>.
+Computationally, <span class="math display">\[\binom{3}{2}_2 =
+\frac{(2^3-1)(2^3-2)}{(2^2-1)(2^2-2)} = \frac{7\cdot6}{3\cdot2} =
+7.\]</span> Each <span class="math inline">\(2\)</span>-dimensional
+subspace is a “plane through the origin” containing <span
+class="math inline">\(4\)</span> vectors (including zero), and the <span
+class="math inline">\(7\)</span> such planes are in bijection with the
+<span class="math inline">\(7\)</span> lines via the orthocomplement
+map.</p>
+</div>
+<h2
+id="the-q-pascal-identity-a-combinatorial-proof-over-finite-fields">The
+<span class="math inline">\(q\)</span>-Pascal Identity: A Combinatorial
+Proof over Finite Fields</h2>
+<div class="thmbox">
+<p><span class="math display">\[\binom{n+1}{k}_q = \binom{n}{k}_q +
+q^{n-k+1}\binom{n}{k-1}_q\]</span></p>
+</div>
+<p>This has a beautiful combinatorial proof when <span
+class="math inline">\(q\)</span> is a prime power. Take an <span
+class="math inline">\((n+1)\)</span>-dimensional space <span
+class="math inline">\(V\)</span> over <span
+class="math inline">\(GF(q)\)</span>, and fix an <span
+class="math inline">\(n\)</span>-dimensional subspace <span
+class="math inline">\(V&#39;\)</span>. Any <span
+class="math inline">\(k\)</span>-dimensional subspace <span
+class="math inline">\(H\)</span> of <span
+class="math inline">\(V\)</span> either satisfies:</p>
+<ul>
+<li><p><strong>Case 1: <span class="math inline">\(H\subseteq
+V&#39;\)</span>.</strong> There are <span
+class="math inline">\(\binom{n}{k}_q\)</span> such subspaces,
+contributing the first term.</p></li>
+<li><p><strong>Case 2: <span class="math inline">\(H\not\subseteq
+V&#39;\)</span>.</strong> Then <span
+class="math inline">\(\dim(V&#39;\cap H)=k-1\)</span> by the dimension
+formula <span class="math display">\[\dim(\operatorname{span}\{A,B\}) =
+\dim(A)+\dim(B)-\dim(A\cap B).\]</span> Indeed, since <span
+class="math inline">\(V&#39;\)</span> has codimension <span
+class="math inline">\(1\)</span> and <span
+class="math inline">\(H\not\subseteq V&#39;\)</span>, the quotient map
+<span class="math inline">\(V\to V/V&#39;\)</span> restricted to <span
+class="math inline">\(H\)</span> is surjective onto the <span
+class="math inline">\(1\)</span>-dimensional space <span
+class="math inline">\(V/V&#39;\)</span>, and rank–nullity forces <span
+class="math inline">\(\dim(H\cap V&#39;)=\dim H-1=k-1\)</span>. There
+are <span class="math inline">\(\binom{n}{k-1}_q\)</span> choices for
+<span class="math inline">\(V&#39;\cap H\)</span>, and for each, <span
+class="math inline">\(q^{n-k+1}\)</span> ways to extend it to a <span
+class="math inline">\(k\)</span>-dimensional subspace of <span
+class="math inline">\(V\)</span>, yielding <span
+class="math inline">\(q^{n-k+1}\binom{n}{k-1}_q\)</span>
+subspaces.</p></li>
+</ul>
+<p>Since both sides of the identity are polynomials in <span
+class="math inline">\(q\)</span> that agree for all prime powers, they
+must be equal as polynomial identities. This illustrates a powerful
+technique in <span class="math inline">\(q\)</span>-combinatorics:
+proving polynomial identities by verifying them at sufficiently many
+special values (prime powers).</p>
+<h2 id="the-subsetsubspace-analogy">The Subset–Subspace Analogy</h2>
+<p>The subspace interpretation reveals a deep analogy between subsets
+and subspaces, highlighted by Gian-Carlo Rota. The subspace relation
+replaces the subset relation (both define partial orders), span replaces
+union, and the orthocomplement replaces the complement.</p>
+<h3 class="unnumbered" id="the-core-idea-in-plain-words">The core idea,
+in plain words</h3>
+<div class="keybox">
+<p>Think of the everyday fact that subsets of a set behave nicely
+together:</p>
+<ul>
+<li><p>You can <strong>intersect</strong> two subsets (the biggest thing
+contained in both).</p></li>
+<li><p>You can take their <strong>union</strong> (the smallest thing
+containing both).</p></li>
+<li><p>Every subset has a <strong>complement</strong>, and a set
+together with its complement splits everything into two disjoint,
+“everything-covering” pieces: <span class="math inline">\(A\cap
+A^c=\varnothing\)</span> and <span class="math inline">\(A\cup
+A^c=S\)</span>.</p></li>
+</ul>
+<p>Rota’s observation is that if you swap the word “subset” for
+“subspace” and “set” for “vector space,” almost the same story plays
+out:</p>
+<div class="center">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Sets</th>
+<th style="text-align: left;">Subspaces</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\subseteq
+B\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(U\subseteq
+W\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(A\cap
+B\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(U\cap
+W\)</span> (intersection — still a subspace)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\cup
+B\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(U+W=\operatorname{span}(U\cup W)\)</span>
+(smallest subspace containing both)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">complement <span
+class="math inline">\(A^c\)</span></td>
+<td style="text-align: left;">orthogonal complement <span
+class="math inline">\(W^{\perp}\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(A\cap
+A^c=\varnothing\)</span></td>
+<td style="text-align: left;">usually <span class="math inline">\(W\cap
+W^{\perp}=\{0\}\)</span> …but not always!</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>So “subspace” is doing the job “subset” used to do; intersection and
+span play the role of intersection and union, and both structures form a
+<strong>lattice</strong> (a partial order where any two elements have a
+meet and a join).</p>
+</div>
+<p>The key dimension relation <span
+class="math display">\[\dim(L^{\perp}) = n-\dim(L), \qquad
+(L^{\perp})^{\perp} = L\]</span> holds for any subspace <span
+class="math inline">\(L\)</span> of an <span
+class="math inline">\(n\)</span>-dimensional space, establishing a
+duality between <span class="math inline">\(k\)</span>-dimensional and
+<span class="math inline">\((n-k)\)</span>-dimensional subspaces. This
+duality explains the symmetry <span class="math inline">\(\binom{n}{k}_q
+= \binom{n}{n-k}_q\)</span>: the orthocomplement map gives a bijection
+between <span class="math inline">\(k\)</span>-dimensional and <span
+class="math inline">\((n-k)\)</span>-dimensional subspaces, exactly as
+we saw concretely with the <span class="math inline">\(7\)</span> lines
+and <span class="math inline">\(7\)</span> planes in <span
+class="math inline">\(GF(2)^3\)</span> above.</p>
+<div class="keybox">
+<p>Over the real numbers, a nonzero vector can never be orthogonal to
+itself, because <span class="math inline">\(v\cdot v=\sum
+v_i^2&gt;0\)</span> unless <span class="math inline">\(v=0\)</span>.
+That is exactly why <span class="math inline">\(W\cap
+W^{\perp}=\{0\}\)</span> always holds for real vector spaces — it is the
+exact analogue of <span class="math inline">\(A\cap
+A^c=\varnothing\)</span>.</p>
+<p>But over a finite field <span
+class="math inline">\(\mathbb{F}_q\)</span>, the dot product can vanish
+on a nonzero vector (there is no notion of “positive”), so a vector — or
+even a whole subspace — can be <strong>orthogonal to itself</strong>.
+Then <span class="math inline">\(W\cap
+W^{\perp}\)</span> is not just <span
+class="math inline">\(\{0\}\)</span> anymore. The perfect set-complement
+analogy quietly fails.</p>
+</div>
+<h4 id="the-counting-punchline.">The counting punchline.</h4>
+<p>The number of <span class="math inline">\(k\)</span>-element subsets
+of an <span class="math inline">\(n\)</span>-element set is the binomial
+coefficient <span class="math inline">\(\binom{n}{k}\)</span>. The
+number of <span class="math inline">\(k\)</span>-dimensional subspaces
+of <span class="math inline">\(\mathbb{F}_q^n\)</span> is the Gaussian
+(<span class="math inline">\(q\)</span>-)binomial coefficient <span
+class="math display">\[\binom{n}{k}_q =
+\frac{(q^n-1)(q^{n-1}-1)\cdots(q^{n-k+1}-1)}
+{(q^k-1)(q^{k-1}-1)\cdots(q-1)},\]</span> and as <span
+class="math inline">\(q\to1\)</span> this formula literally degenerates
+into <span class="math inline">\(\binom{n}{k}\)</span>. So
+subspace-counting is a “<span class="math inline">\(q\)</span>-deformed”
+version of subset-counting — hence the slogan that theorems about sets
+become theorems about subspaces once you replace <span
+class="math inline">\(\binom{n}{k}\)</span> by <span
+class="math inline">\(\binom{n}{k}_q\)</span>.</p>
+<h3 class="unnumbered" id="worked-example-vmathbbf_22">Worked example:
+<span class="math inline">\(V=\mathbb{F}_2^2\)</span></h3>
+<div class="exbox">
+<p>Take the vector space <span
+class="math inline">\(V=\mathbb{F}_2^2\)</span>: four vectors, <span
+class="math inline">\(00,01,10,11\)</span>.</p>
+<h4 id="step-1-subspaces-and-the-lattice-structure.">Step 1 — subspaces,
+and the lattice structure.</h4>
+<ul>
+<li><p>dimension <span class="math inline">\(0\)</span>: just <span
+class="math inline">\(\{00\}\)</span></p></li>
+<li><p>dimension <span class="math inline">\(1\)</span>: <span
+class="math inline">\(U_1=\{00,01\}\)</span>, <span
+class="math inline">\(U_2=\{00,10\}\)</span>, <span
+class="math inline">\(U_3=\{00,11\}\)</span></p></li>
+<li><p>dimension <span class="math inline">\(2\)</span>: all of <span
+class="math inline">\(V\)</span></p></li>
+</ul>
+<p>Check the counting formula: <span
+class="math inline">\(\binom{2}{1}_2=\dfrac{2^2-1}{2-1}=3\)</span> —
+matches; we found exactly <span class="math inline">\(3\)</span>
+one-dimensional subspaces. (Compare: a <span
+class="math inline">\(2\)</span>-element set only has <span
+class="math inline">\(\binom{2}{1}=2\)</span> one-element subsets — the
+“<span class="math inline">\(q\)</span>-version” gives a genuinely
+different, larger number, since each nonzero vector, not each element,
+generates a subspace.)</p>
+<h4 id="step-2-meet-and-join-just-like-cap-and-cup.">Step 2 — meet and
+join, just like <span class="math inline">\(\cap\)</span> and <span
+class="math inline">\(\cup\)</span>.</h4>
+<p>Let <span class="math inline">\(U=\{00,01\}\)</span>, <span
+class="math inline">\(W=\{00,10\}\)</span>.</p>
+<ul>
+<li><p>Meet: <span class="math inline">\(U\cap W=\{00\}\)</span> (only
+the zero vector is shared) — the “intersection.”</p></li>
+<li><p>Join: <span
+class="math inline">\(U+W=\operatorname{span}\{01,10\}=V\)</span>
+(together they generate everything) — the “union.”</p></li>
+</ul>
+<p>This is exactly the Boolean-algebra pattern: two “atoms” of the
+lattice meet at the bottom (<span class="math inline">\(\{00\}\)</span>)
+and join at the top (<span class="math inline">\(V\)</span>).</p>
+<h4 id="step-3-the-orthocomplement-and-where-it-goes-strange.">Step 3 —
+the orthocomplement, and where it goes strange.</h4>
+<p>Use the standard dot product mod <span
+class="math inline">\(2\)</span>: <span class="math inline">\(x\cdot
+y=x_1y_1+x_2y_2\pmod2\)</span>.</p>
+<p>Take <span class="math inline">\(v=(1,1)\)</span> and check <span
+class="math inline">\(v\cdot v\)</span>: <span
+class="math display">\[v\cdot v = 1\cdot1+1\cdot1 = 2 \equiv 0
+\pmod2.\]</span> So <span class="math inline">\(v\)</span> is
+<strong>orthogonal to itself</strong> — impossible over the real
+numbers, totally normal over <span
+class="math inline">\(\mathbb{F}_2\)</span>. Let <span
+class="math inline">\(W=\operatorname{span}\{(1,1)\}
+=\{00,11\}\)</span>. Its orthogonal complement is <span
+class="math display">\[W^{\perp} = \{x : x\cdot(1,1)=0\} = \{x_1=x_2\} =
+\{00,11\} = W.\]</span> So <span
+class="math inline">\(W^{\perp}=W\)</span> itself, meaning <span
+class="math display">\[W\cap W^{\perp} = W \neq \{0\}.\]</span> That is
+the phenomenon this section points to: the orthogonal complement is
+supposed to act like a “complement” (disjoint from <span
+class="math inline">\(W\)</span>, together spanning everything), but
+here it does not just intersect <span class="math inline">\(W\)</span>
+nontrivially — it <em>equals</em> <span
+class="math inline">\(W\)</span>. Over the reals this could never
+happen; over a finite field, self-orthogonal (“isotropic”) vectors make
+it routine.</p>
+</div>
+<h2 id="inversion-statistics-and-q-binomial-coefficients">Inversion
+Statistics and <span class="math inline">\(q\)</span>-Binomial
+Coefficients</h2>
+<p>A striking combinatorial interpretation of the <span
+class="math inline">\(q\)</span>-binomial coefficients connects them
+back to permutations and inversions. Consider a <span
+class="math inline">\(2\)</span>-letter alphabet <span
+class="math inline">\(X&lt;Y\)</span>, with <span
+class="math inline">\(k\)</span> copies of <span
+class="math inline">\(X\)</span> and <span
+class="math inline">\(n-k\)</span> copies of <span
+class="math inline">\(Y\)</span>. The number of inversions in a word
+(pairs where <span class="math inline">\(X\)</span> appears after <span
+class="math inline">\(Y\)</span>) equals the area under the
+corresponding lattice path from <span
+class="math inline">\((0,0)\)</span> to <span
+class="math inline">\((k,n-k)\)</span>.</p>
+<div class="thmbox">
+<p><span class="math display">\[\binom{n}{k}_q =
+\sum_{\alpha=0}^{k(n-k)} c_{n,k,\alpha}\, q^{\alpha},\]</span> where
+<span class="math inline">\(c_{n,k,\alpha}\)</span> is the number of
+such lattice paths (or words) with exactly <span
+class="math inline">\(\alpha\)</span> inversions. This provides the
+combinatorial bridge: the same polynomial <span
+class="math inline">\(\binom{n}{k}_q\)</span> both counts <span
+class="math inline">\(k\)</span>-dimensional subspaces over <span
+class="math inline">\(GF(q)\)</span> and generates inversion statistics
+on words/partitions.</p>
+</div>
+<h1 id="determinants">Determinants</h1>
+<div class="defbox">
+<p>The <span class="math inline">\(q\)</span>-determinant is a
+fundamental <span class="math inline">\(q\)</span>-analogue of the
+classical determinant that encodes information about permutations
+through their inversion numbers. Given an <span
+class="math inline">\(n\times n\)</span> matrix <span
+class="math inline">\(A=(\alpha_{ij})\)</span> with entries in a
+commutative ring containing <span class="math inline">\(K[q]\)</span>,
+the ordinary determinant is defined as <span
+class="math inline">\(\det(A)=\sum_p(-1)^{i(p)}\alpha_{1p(1)}\alpha_{2p(2)}\cdots\alpha_{np(n)}\)</span>,
+where the sum runs over all permutations <span
+class="math inline">\(p\)</span> of <span
+class="math inline">\(\{1,2,\dots,n\}\)</span> and <span
+class="math inline">\(i(p)\)</span> denotes the number of inversions of
+<span class="math inline">\(p\)</span>. The <span
+class="math inline">\(q\)</span>-determinant replaces <span
+class="math inline">\((-1)\)</span> with the indeterminate <span
+class="math inline">\(q\)</span>, yielding: <span
+class="math display">\[\det{}_q(A) = \sum_p
+q^{i(p)}\alpha_{1p(1)}\alpha_{2p(2)}\cdots\alpha_{np(n)}.\]</span> This
+makes <span class="math inline">\(q\)</span> a marker for the number of
+inversions of a permutation: each permutation contributes a term
+weighted by <span class="math inline">\(q^{i(p)}\)</span>, recording how
+“far” the permutation is from the identity order.</p>
+</div>
+<p>An inversion of a permutation <span
+class="math inline">\(p(1)p(2)\cdots p(n)\)</span> is a pair <span
+class="math inline">\((p(i),p(j))\)</span> such that <span
+class="math inline">\(p(i)&gt;p(j)\)</span> and <span
+class="math inline">\(i&lt;j\)</span>. For example, the permutation
+<span class="math inline">\(p=2431\)</span> has four inversions: <span
+class="math inline">\((2,1),(3,1),(4,1),(4,3)\)</span>, so <span
+class="math inline">\(i(p)=4\)</span>.</p>
+<h2 id="the-q-grassmann-algebra-and-why-the-q-determinant-works">The
+<span class="math inline">\(q\)</span>-Grassmann Algebra and Why the
+<span class="math inline">\(q\)</span>-Determinant Works</h2>
+<p>The deepest reason the <span
+class="math inline">\(q\)</span>-determinant works is its connection to
+the <span class="math inline">\(q\)</span>-Grassmann algebra.</p>
+<div class="defbox">
+<p>A <span class="math inline">\(q\)</span>-Grassmann algebra is the
+associative <span class="math inline">\(K[q]\)</span>-algebra generated
+by <span class="math inline">\(x_1,x_2,\dots,x_n\)</span> satisfying the
+relations <span class="math inline">\(x_i^2=0\)</span> and <span
+class="math inline">\(x_jx_i=q\,x_ix_j\)</span> for <span
+class="math inline">\(i&lt;j\)</span>. In this algebra, every monomial
+can be reordered into a canonical “normal form” where indices appear in
+increasing order. When we swap two adjacent generators <span
+class="math inline">\(x_j\)</span> and <span
+class="math inline">\(x_i\)</span> with <span
+class="math inline">\(i&lt;j\)</span>, we pick up a factor of <span
+class="math inline">\(q\)</span> (rather than <span
+class="math inline">\(-1\)</span> in the ordinary Grassmann/Exterior
+algebra).</p>
+</div>
+<p>Therefore, reordering a general monomial <span
+class="math inline">\(x_{p(1)}x_{p(2)}\cdots x_{p(n)}\)</span> into the
+normal form <span class="math inline">\(x_1x_2\cdots x_n\)</span>
+requires exactly <span class="math inline">\(i(p)\)</span> adjacent
+swaps, producing a factor of <span
+class="math inline">\(q^{i(p)}\)</span>. This is precisely why the <span
+class="math inline">\(q\)</span>-determinant formula captures inversion
+structure: the product of linear forms in the <span
+class="math inline">\(q\)</span>-Grassmann algebra reduces to <span
+class="math display">\[(\alpha_{11}x_1+\cdots+\alpha_{1n}x_n)(\alpha_{21}x_1+\cdots+\alpha_{2n}x_n)
+\cdots(\alpha_{n1}x_1+\cdots+\alpha_{nn}x_n)
+= \det{}_q(\alpha_{ij})\,x_1x_2\cdots x_n.\]</span> exactly mirroring
+the classical result that the exterior product of rows gives the
+determinant times the top-form. The key intuition: in the ordinary
+exterior algebra, antisymmetry produces <span
+class="math inline">\(-1\)</span> per inversion (the sign of a
+permutation), while the <span class="math inline">\(q\)</span>-Grassmann
+algebra produces <span class="math inline">\(q\)</span> per inversion.
+The <span class="math inline">\(q\)</span>-determinant is the “volume
+element” recording the cumulative deformation from <span
+class="math inline">\(q\)</span>-commutativity.</p>
+<h2 id="detailed-example-2times2-and-3times3-q-determinants">Detailed
+Example: <span class="math inline">\(2\times2\)</span> and <span
+class="math inline">\(3\times3\)</span> <span
+class="math inline">\(q\)</span>-Determinants</h2>
+<div class="exbox">
+<p>Let <span
+class="math inline">\(A=\begin{pmatrix}a&amp;b\\c&amp;d\end{pmatrix}\)</span>.
+There are two permutations of <span
+class="math inline">\(\{1,2\}\)</span>: the identity <span
+class="math inline">\(p=12\)</span> with <span
+class="math inline">\(i(p)=0\)</span>, and the transposition <span
+class="math inline">\(p=21\)</span> with <span
+class="math inline">\(i(p)=1\)</span>. By definition: <span
+class="math display">\[\det{}_q(A) = q^0\cdot ad + q^1\cdot bc =
+ad+qbc.\]</span> Note the contrast with the classical determinant <span
+class="math inline">\(\det(A)=ad-bc\)</span>, where <span
+class="math inline">\((-1)^1=-1\)</span> replaces <span
+class="math inline">\(q^1=q\)</span>. In the <span
+class="math inline">\(q\)</span>-Grassmann algebra approach, we compute
+<span class="math inline">\((ax_1+cx_2)(bx_1+dx_2)\)</span>. Expanding
+and using <span class="math inline">\(x_2x_1=qx_1x_2\)</span> along with
+<span class="math inline">\(x_i^2=0\)</span>, we get <span
+class="math display">\[ab\cdot0 + ad\cdot x_1x_2 + cb\cdot x_2x_1 +
+cd\cdot0 = (ad+qbc)x_1x_2,\]</span> confirming the <span
+class="math inline">\(q\)</span>-determinant.</p>
+</div>
+<div class="exbox">
+<p>Let <span
+class="math inline">\(A=\begin{pmatrix}a_{11}&amp;a_{12}&amp;a_{13}\\a_{21}&amp;a_{22}&amp;a_{23}\\a_{31}&amp;a_{32}&amp;a_{33}\end{pmatrix}\)</span>.
+The six permutations of <span class="math inline">\(\{1,2,3\}\)</span>
+and their inversion numbers are:</p>
+<div class="center">
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Permutation</th>
+<th style="text-align: center;">One-line form</th>
+<th style="text-align: center;">Inversions</th>
+<th style="text-align: center;"><span
+class="math inline">\(i(p)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Identity</td>
+<td style="text-align: center;"><span
+class="math inline">\(123\)</span></td>
+<td style="text-align: center;">None</td>
+<td style="text-align: center;"><span
+class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Swap <span
+class="math inline">\((1,2)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(213\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\((2,1)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Swap <span
+class="math inline">\((2,3)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(132\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\((3,2)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rotation <span
+class="math inline">\((1,2,3)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(231\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\((2,1),(3,1)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(2\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rotation <span
+class="math inline">\((1,3,2)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(312\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\((3,1),(3,2)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(2\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reverse</td>
+<td style="text-align: center;"><span
+class="math inline">\(321\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\((3,2),(3,1),(2,1)\)</span></td>
+<td style="text-align: center;"><span
+class="math inline">\(3\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <span class="math inline">\(q\)</span>-determinant is therefore
+<span class="math display">\[\det{}_q(A) = a_{11}a_{22}a_{33} + q\cdot
+a_{12}a_{21}a_{33}
++ q\cdot a_{11}a_{23}a_{32} + q^2\cdot a_{13}a_{21}a_{32}
++ q^2\cdot a_{12}a_{23}a_{31} + q^3\cdot a_{13}a_{22}a_{31}.\]</span>
+Setting <span class="math inline">\(q=-1\)</span> recovers the classical
+determinant with its sign pattern, while <span
+class="math inline">\(q=1\)</span> yields the permanent. This example
+shows concretely how the power of <span class="math inline">\(q\)</span>
+attached to each term encodes the “disorder” of the corresponding
+permutation.</p>
+</div>
+<h2 id="properties-of-the-q-determinant">Properties of the <span
+class="math inline">\(q\)</span>-Determinant</h2>
+<p>The <span class="math inline">\(q\)</span>-determinant satisfies
+several key structural properties that explain why it is the correct
+<span class="math inline">\(q\)</span>-analogue:</p>
+<div class="propbox">
+<ul>
+<li><p><strong>Multilinearity:</strong> The <span
+class="math inline">\(q\)</span>-determinant is a multilinear function
+of both rows and columns, just as the classical determinant. This
+follows directly from the linearity of the summation over
+permutations.</p></li>
+<li><p><strong>Block triangular property:</strong> The <span
+class="math inline">\(q\)</span>-determinant of a block upper/lower
+triangular matrix equals the product of the <span
+class="math inline">\(q\)</span>-determinants of the diagonal
+blocks.</p></li>
+<li><p><strong>Transposition invariance:</strong> <span
+class="math inline">\(\det_q(A)=\det_q(A^T)\)</span>, which holds
+because <span class="math inline">\(i(p)=i(p^{-1})\)</span> for any
+permutation.</p></li>
+<li><p><strong>Expansion theorem:</strong> Laplace-type expansions hold
+with <span class="math inline">\(q\)</span>-weighted cofactors. For
+example, expanding along the first column: <span
+class="math display">\[\det{}_q(A) = \alpha_{11}\det{}_q(A_{11}) +
+q\alpha_{21}\det{}_q(A_{21})
+  + q^2\alpha_{31}\det{}_q(A_{31}) + \cdots +
+q^{n-1}\alpha_{n1}\det{}_q(A_{n1}).\]</span></p></li>
+<li><p><strong>Permutation of columns:</strong> Permuting the columns of
+a <span class="math inline">\(q\)</span>-Manin matrix by <span
+class="math inline">\(\sigma\in S_n\)</span> introduces a factor <span
+class="math inline">\((-q)^{-\operatorname{inv}(\sigma)}\)</span>,
+generalizing the sign change in the classical case.</p></li>
+</ul>
+</div>
+<h2
+id="generating-functions-from-q-determinants-and-01-matrices">Generating
+Functions from <span class="math inline">\(q\)</span>-Determinants and
+<span class="math inline">\((0,1)\)</span>-Matrices</h2>
+<p>A powerful application of <span
+class="math inline">\(q\)</span>-determinants is computing generating
+functions for inversions of permutations with restrictions. Yang showed
+that by evaluating <span class="math inline">\(q\)</span>-determinants
+of carefully chosen <span class="math inline">\((0,1)\)</span>-matrices,
+one obtains generating functions for restricted permutations:</p>
+<div class="thmbox">
+<ul>
+<li><p><strong>All permutations:</strong> The <span
+class="math inline">\(q\)</span>-determinant of the all-ones matrix
+<span class="math inline">\(J_n\)</span> gives <span
+class="math inline">\(\sum_p q^{i(p)} = [n]_q! =
+[1]_q[2]_q\cdots[n]_q\)</span>, the <span
+class="math inline">\(q\)</span>-factorial, using the expansion theorem
+inductively.</p></li>
+<li><p><strong>Banded permutations:</strong> For permutations satisfying
+<span class="math inline">\(i-p(i)&lt;r\)</span> for all <span
+class="math inline">\(i\)</span>, the generating function is <span
+class="math inline">\([r]_q^{n-r}[r]_q!\)</span>, obtained from the
+<span class="math inline">\(q\)</span>-determinant of a banded <span
+class="math inline">\((0,1)\)</span>-matrix.</p></li>
+<li><p><strong>Near-identity permutations:</strong> For permutations
+with <span class="math inline">\(|i-p(i)|&lt;2\)</span> for all <span
+class="math inline">\(i\)</span>, the generating function is the
+Fibonacci polynomial <span class="math inline">\(F_{n+1}(q)\)</span>,
+derived from the recurrence <span
+class="math display">\[\det{}_q(L_{n+1}) = \det{}_q(L_n) +
+q\det{}_q(L_{n-1})\]</span> satisfied by the <span
+class="math inline">\(q\)</span>-determinant of a tridiagonal <span
+class="math inline">\((0,1)\)</span>-matrix.</p></li>
+</ul>
+</div>
+<p>Subtracting these from <span class="math inline">\([n]_q!\)</span>
+gives generating functions for permutations <em>violating</em> the
+constraints. For instance, the generating function for permutations
+where some <span class="math inline">\(i-p(i)\ge2\)</span> is <span
+class="math inline">\([n]_q!-F_{n+1}(q)\)</span>. These results
+demonstrate that the <span class="math inline">\(q\)</span>-determinant
+provides a unifying algebraic mechanism for extracting combinatorial
+statistics from permutation classes.</p>
+<h1 id="unified-perspective-why-the-theory-works">Unified Perspective:
+Why the Theory Works</h1>
+<p>The unification of <span
+class="math inline">\(q\)</span>-determinants, permutations, and finite
+field linear spaces rests on a single structural observation: the
+inversion number is the fundamental measure of deviation from order,
+whether one is measuring:</p>
+<div class="keybox">
+<ul>
+<li><p>How far a permutation is from the identity (inversions <span
+class="math inline">\(i(p)\)</span>).</p></li>
+<li><p>How many swaps are needed to reorder <span
+class="math inline">\(q\)</span>-Grassmann monomials (each swap
+contributes a factor of <span class="math inline">\(q\)</span>, the same
+as the minimum number of adjacent swaps needed to sort the
+permutation).</p></li>
+<li><p>How many “crossings” a lattice path has (the area under the path
+equals the inversions in the coding word).</p></li>
+<li><p>How many “independent choices” remain when building subspaces
+over finite fields (each independent vector eliminates <span
+class="math inline">\(q^i\)</span> previously available
+vectors).</p></li>
+</ul>
+<p>The <span class="math inline">\(q\)</span>-determinant packages all
+of this into one algebraic object. When <span
+class="math inline">\(q=-1\)</span>, we recover the signed world of the
+classical determinant; when <span class="math inline">\(q=1\)</span>, we
+get the unsigned world of permanents; and when <span
+class="math inline">\(q\)</span> is a prime power, the <span
+class="math inline">\(q\)</span>-binomial coefficients count actual
+subspaces. The <span class="math inline">\(q\)</span>-Grassmann algebra
+provides the algebraic home where <span
+class="math inline">\(q\)</span>-determinants arise naturally as volume
+elements, just as the classical exterior algebra hosts the ordinary
+determinant.</p>
+</div>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"0357a45f23a943f08700f7f9af191ee6","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>

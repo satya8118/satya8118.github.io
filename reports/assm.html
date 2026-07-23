@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Almost Skew-Symmetric Matrices — Interactive Slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: { inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$'],['\\[','\\]']] },
+  svg: { fontCache:'global' },
+  startup: { typeset: false }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+<style>
+/* ── tokens ─────────────────────────────────── */
+:root{
+  --bg:      #080E1A;
+  --surface: #0F1A2E;
+  --card:    #162035;
+  --border:  #1F3050;
+  --teal:    #00DFA2;
+  --teal-dim:#00704E;
+  --coral:   #FF5470;
+  --coral-dim:#7A1E2E;
+  --gold:    #FFB700;
+  --gold-dim:#6B4A00;
+  --lavender:#A78BFA;
+  --lav-dim: #3D2A7A;
+  --text:    #E8F2FF;
+  --muted:   #6B8BAE;
+  --faint:   #273E58;
+  --radius:  12px;
+}
+
+/* ── reset ───────────────────────────────────── */
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%; overflow:hidden; background:var(--bg);}
+body{font-family:'Inter',sans-serif; color:var(--text); -webkit-font-smoothing:antialiased;}
+
+/* ── progress bar ───────────────────────────── */
+#progress{
+  position:fixed; top:0; left:0; height:3px;
+  background:linear-gradient(90deg,var(--teal),var(--lavender));
+  transition:width .4s ease; z-index:100; width:0%;
+}
+
+/* ── slide deck ─────────────────────────────── */
+#deck{
+  position:fixed; inset:0; top:3px;
+  overflow:hidden;
+}
+.slide{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:20px 24px 80px;
+  overflow-y:auto;
+  opacity:0; pointer-events:none;
+  transform:translateX(48px);
+  transition:opacity .38s ease, transform .38s ease;
+}
+.slide.active{
+  opacity:1; pointer-events:all; transform:translateX(0);
+}
+.slide.exit-left{ opacity:0; transform:translateX(-48px); }
+
+.slide-inner{
+  width:100%; max-width:800px;
+  display:flex; flex-direction:column; gap:18px;
+}
+
+/* ── nav bar ─────────────────────────────────── */
+#nav{
+  position:fixed; bottom:0; left:0; right:0; height:64px;
+  display:flex; align-items:center; justify-content:center; gap:24px;
+  background:linear-gradient(to top, var(--bg) 60%, transparent);
+  z-index:50;
+}
+.nav-btn{
+  background:var(--card); border:1px solid var(--border); color:var(--text);
+  font-size:1.1rem; font-weight:600; width:44px; height:44px;
+  border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:background .18s, border-color .18s, transform .1s;
+}
+.nav-btn:hover:not(:disabled){ background:var(--faint); border-color:var(--muted); }
+.nav-btn:active{ transform:scale(0.93); }
+.nav-btn:disabled{ opacity:.3; cursor:not-allowed; }
+#counter{
+  font-family:'JetBrains Mono',monospace; font-size:.82rem;
+  color:var(--muted); letter-spacing:.06em; min-width:60px; text-align:center;
+}
+.dot-row{display:flex; gap:6px; align-items:center;}
+.dot{
+  width:6px; height:6px; border-radius:50%; background:var(--faint);
+  cursor:pointer; transition:background .2s, transform .2s;
+}
+.dot.active{ background:var(--teal); transform:scale(1.4); }
+
+/* ── type ───────────────────────────────────── */
+h1{font-family:'DM Serif Display',serif; font-size:clamp(2rem,5vw,3.2rem);
+   line-height:1.1; letter-spacing:-.01em;}
+h2{font-family:'DM Serif Display',serif; font-size:clamp(1.4rem,3.5vw,2rem);
+   line-height:1.2; color:var(--teal);}
+h3{font-family:'Inter',sans-serif; font-size:1.05rem; font-weight:600; color:var(--gold);}
+p{line-height:1.72; color:var(--text); font-size:1rem;}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace; font-size:.7rem;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--muted);
+  display:flex; align-items:center; gap:8px;
+}
+.eyebrow::before{ content:''; width:20px; height:1px; background:var(--muted); }
+
+/* ── title slide ─────────────────────────────── */
+.title-slide{ text-align:center; }
+.title-slide h1{ font-size:clamp(2.4rem,6vw,4rem); }
+.title-slide h1 em{ font-style:italic; color:var(--teal); }
+.title-accent{
+  font-size:.95rem; color:var(--muted); line-height:1.6;
+  max-width:520px; margin:0 auto;
+}
+.start-hint{
+  margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:.75rem;
+  color:var(--faint); letter-spacing:.08em;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{ 0%,100%{opacity:.4} 50%{opacity:1} }
+
+/* ── theorem / definition / remark boxes ──── */
+.box{
+  border-radius:var(--radius); padding:18px 22px 16px;
+  border:1px solid; position:relative;
+}
+.box .box-label{
+  font-family:'JetBrains Mono',monospace; font-size:.68rem;
+  letter-spacing:.12em; text-transform:uppercase; font-weight:600;
+  display:block; margin-bottom:8px;
+}
+.box .source{ font-weight:400; opacity:.55; font-size:.65rem; letter-spacing:0; margin-left:6px; }
+.box p:last-child{ margin-bottom:0; }
+
+.box.thm{ background:rgba(0,223,162,.06); border-color:var(--teal-dim); }
+.box.thm .box-label{ color:var(--teal); }
+.box.thm{ border-left:3px solid var(--teal); }
+
+.box.def{ background:rgba(167,139,250,.07); border-color:var(--lav-dim); }
+.box.def .box-label{ color:var(--lavender); }
+.box.def{ border-left:3px solid var(--lavender); }
+
+.box.rem{ background:rgba(255,183,0,.06); border-color:var(--gold-dim); }
+.box.rem .box-label{ color:var(--gold); }
+
+.box.ex{ background:rgba(255,84,112,.06); border-color:var(--coral-dim); }
+.box.ex .box-label{ color:var(--coral); }
+
+/* ── Q&A blocks ──────────────────────────────── */
+.qa{
+  border-radius:var(--radius); overflow:hidden;
+  border:1px solid var(--gold-dim); background:rgba(255,183,0,.04);
+}
+.qa-question{
+  padding:16px 20px;
+  display:flex; gap:12px; align-items:flex-start;
+}
+.qa-q-icon{
+  flex-shrink:0; width:28px; height:28px; border-radius:50%;
+  background:var(--gold); color:#000; display:flex; align-items:center;
+  justify-content:center; font-weight:700; font-size:.85rem; margin-top:1px;
+}
+.qa-q-text{ color:var(--text); line-height:1.65; font-size:.97rem; }
+.qa-q-text strong{ color:var(--gold); display:block; margin-bottom:4px;
+  font-family:'JetBrains Mono',monospace; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; }
+.qa-reveal-btn{
+  display:block; width:100%; padding:11px;
+  background:var(--card); border:none; border-top:1px solid var(--gold-dim);
+  color:var(--gold); font-family:'JetBrains Mono',monospace; font-size:.75rem;
+  letter-spacing:.1em; text-transform:uppercase; cursor:pointer;
+  transition:background .18s;
+}
+.qa-reveal-btn:hover{ background:rgba(255,183,0,.12); }
+.qa-answer{
+  max-height:0; overflow:hidden;
+  transition:max-height .5s cubic-bezier(.4,0,.2,1), padding .4s;
+  border-top:0; padding:0 20px;
+}
+.qa-answer.open{
+  max-height:600px; padding:16px 20px;
+  border-top:1px solid var(--gold-dim);
+}
+.qa-a-icon{
+  display:inline-flex; width:22px; height:22px; border-radius:50%;
+  background:var(--teal); color:#000; align-items:center; justify-content:center;
+  font-weight:700; font-size:.78rem; margin-right:8px; vertical-align:middle;
+}
+
+/* ── two-column layout ──────────────────────── */
+.cols{ display:flex; gap:18px; }
+.cols > *{ flex:1; }
+@media(max-width:580px){ .cols{ flex-direction:column; } }
+
+/* ── matrix display ──────────────────────────── */
+.mat-wrap{
+  font-family:'JetBrains Mono',monospace; font-size:.88rem;
+  display:inline-flex; align-items:center; gap:4px;
+}
+.mat-bracket{ font-size:2.4rem; font-weight:300; color:var(--muted); line-height:1; }
+.mat-grid{ display:grid; gap:3px 10px; align-items:center; }
+.mat-cell{ text-align:right; min-width:20px; color:var(--text); }
+.mat-cell.hi-t{ color:var(--teal); font-weight:600; }
+.mat-cell.hi-c{ color:var(--coral); font-weight:600; }
+.mat-cell.hi-g{ color:var(--gold); font-weight:600; }
+
+/* ── table ───────────────────────────────────── */
+.data-table{
+  width:100%; border-collapse:collapse;
+  font-size:.87rem; font-family:'JetBrains Mono',monospace;
+}
+.data-table th{
+  padding:8px 12px; text-align:left; color:var(--muted);
+  border-bottom:1px solid var(--border); font-weight:500;
+  font-size:.72rem; letter-spacing:.08em; text-transform:uppercase;
+}
+.data-table td{
+  padding:8px 12px; border-bottom:1px solid var(--faint); color:var(--text);
+}
+.data-table tr:last-child td{ border-bottom:none; }
+.data-table tr:nth-child(even){ background:rgba(255,255,255,.02); }
+.badge{
+  display:inline-block; padding:2px 8px; border-radius:20px; font-size:.7rem;
+}
+.badge.yes{ background:rgba(0,223,162,.15); color:var(--teal); }
+.badge.no{ background:rgba(255,84,112,.15); color:var(--coral); }
+
+/* ── proof strip (non-QA) ───────────────────── */
+details.proof-strip{
+  border:1px dashed var(--border); border-radius:8px;
+  background:rgba(255,255,255,.02);
+}
+details.proof-strip summary{
+  list-style:none; padding:10px 16px; cursor:pointer;
+  font-family:'JetBrains Mono',monospace; font-size:.72rem;
+  color:var(--lavender); letter-spacing:.1em; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px; user-select:none;
+}
+details.proof-strip summary::-webkit-details-marker{ display:none; }
+details.proof-strip summary::before{
+  content:'▸'; transition:transform .15s;
+}
+details.proof-strip[open] summary::before{ transform:rotate(90deg); }
+details.proof-strip .inner{
+  padding:4px 18px 16px; border-top:1px dashed var(--border);
+  font-size:.93rem;
+}
+
+/* ── progress bullets ──────────────────────── */
+.section-marker{
+  font-family:'JetBrains Mono',monospace; font-size:.68rem;
+  color:var(--faint); letter-spacing:.12em; text-transform:uppercase;
+}
+
+/* ── formula highlight ──────────────────────── */
+.formula-hero{
+  text-align:center; padding:20px;
+  background:rgba(0,223,162,.05); border:1px solid var(--teal-dim);
+  border-radius:var(--radius); font-size:1.15rem;
+}
+
+/* ── scrollbar ──────────────────────────────── */
+.slide::-webkit-scrollbar{ width:4px; }
+.slide::-webkit-scrollbar-track{ background:transparent; }
+.slide::-webkit-scrollbar-thumb{ background:var(--faint); border-radius:2px; }
+
+/* ── end card ───────────────────────────────── */
+.end-card{
+  text-align:center;
+  background:linear-gradient(135deg,rgba(0,223,162,.07),rgba(167,139,250,.07));
+  border:1px solid var(--border); border-radius:16px; padding:36px 28px;
+}
+.end-card h2{ color:var(--lavender); font-size:1.6rem; }
+.cite{
+  font-size:.83rem; color:var(--muted); line-height:1.7;
+  font-style:italic; margin-top:10px;
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div id="deck">
+
+<!-- ══════════════ SLIDE 1 — TITLE ══════════════ -->
+<section class="slide active" id="s1">
+<div class="slide-inner title-slide">
+  <div class="eyebrow" style="justify-content:center; margin-bottom:4px;">Part I · Foundations · Interactive Edition</div>
+  <h1>Almost <em>Skew-Symmetric</em><br>Matrices</h1>
+  <p class="title-accent" style="margin-top:12px;">
+    What happens when a perfectly antisymmetric matrix develops
+    a one-dimensional flaw — and why that flaw turns out to be
+    unreasonably well-behaved.
+  </p>
+  <p class="title-accent" style="margin-top:6px; font-style:italic; font-size:.88rem;">
+    Following P. N. Choudhury &amp; K. C. Sivakumar,
+    <em>Linear Algebra and its Applications</em> 482 (2015), 55–69.
+  </p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px;">
+    <span style="background:rgba(0,223,162,.12);color:var(--teal);padding:5px 14px;border-radius:20px;font-size:.8rem;font-family:'JetBrains Mono',monospace;">18 slides</span>
+    <span style="background:rgba(167,139,250,.12);color:var(--lavender);padding:5px 14px;border-radius:20px;font-size:.8rem;font-family:'JetBrains Mono',monospace;">Q &amp; A reveals</span>
+    <span style="background:rgba(255,183,0,.12);color:var(--gold);padding:5px 14px;border-radius:20px;font-size:.8rem;font-family:'JetBrains Mono',monospace;">keyboard navigation</span>
+  </div>
+  <p class="start-hint" style="margin-top:22px;">Press → or click Next to begin</p>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 2 — DECOMPOSITION ══════════════ -->
+<section class="slide" id="s2">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 2 · Warm-up</div>
+  <h2>Every matrix is a stretch plus a spin</h2>
+  <p>For any $A\in\mathbb{R}^{n\times n}$ define
+  $$S(A)=\tfrac{1}{2}(A+A^t),\qquad K(A)=\tfrac{1}{2}(A-A^t).$$</p>
+  <div class="box thm">
+    <span class="box-label">Decomposition Theorem</span>
+    <p>$S(A)$ is symmetric, $K(A)$ is skew-symmetric, $A=S(A)+K(A)$, and this splitting is <strong>unique</strong>.</p>
+  </div>
+  <details class="proof-strip">
+    <summary>Show proof</summary>
+    <div class="inner">
+      <p><strong>Existence:</strong> Check $(S(A))^t = S(A)$ and $(K(A))^t = -K(A)$ directly; sum gives $A$.</p>
+      <p style="margin-top:10px;"><strong>Uniqueness:</strong> If $A = S_1+K_1 = S_2+K_2$, then $M := S_1-S_2 = K_2-K_1$ is simultaneously symmetric and skew-symmetric, so $M = M^t = -M$, giving $M=0$. $\square$</p>
+    </div>
+  </details>
+  <div class="box rem" style="margin-top:4px;">
+    <span class="box-label">Immediate consequence</span>
+    <p>$\operatorname{rk}(S(A))=0$ $\iff$ $A$ is skew-symmetric. The rank of $S(A)$ measures <em>how far</em> $A$ is from being skew-symmetric.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 3 — QUADRATIC FORMS I ══════════════ -->
+<section class="slide" id="s3">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 3 · Key identity</div>
+  <h2>The skew part is invisible to quadratic forms</h2>
+  <p>The <em>quadratic form</em> of $A$ at $x$ is the scalar $x^tAx$. The decomposition collapses it:</p>
+  <div class="formula-hero">
+    $$x^tAx \;=\; x^tS(A)x$$
+  </div>
+  <div class="qa" style="margin-top:4px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Try it</strong>
+        Prove that $x^tK(A)x = 0$ for any skew-symmetric matrix $K$ and any vector $x\in\mathbb{R}^n$. Why does this mean $x^tAx = x^tS(A)x$?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> $x^tKx$ is a $1\times1$ scalar, so it equals its own transpose:</p>
+      <p style="margin:8px 0 0 30px;">$x^tKx = (x^tKx)^t = x^tK^tx = x^t(-K)x = -x^tKx.$</p>
+      <p style="margin:8px 0 0;">Hence $2x^tKx = 0$, so $x^tKx = 0$. Then $x^tAx = x^t(S(A)+K(A))x = x^tS(A)x + 0$. $\square$</p>
+    </div>
+  </div>
+  <div class="box rem" style="margin-top:6px;">
+    <span class="box-label">Consequence</span>
+    <p>Swapping $K(A)$ for <em>any</em> other skew-symmetric matrix leaves $x^tAx$ unchanged for every $x$. Two matrices with the same symmetric part define identical quadratic forms.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 4 — QUADRATIC FORMS II ══════════════ -->
+<section class="slide" id="s4">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 4 · Almost skew-symmetric case</div>
+  <h2>A perfect square — the payoff</h2>
+  <p>When $A$ is almost skew-symmetric we have $S(A)=ww^t$ (one nonzero eigenvalue $\lambda>0$, unit eigenvector $q$, $w=\sqrt\lambda\,q$). Substituting into slide 3:</p>
+  <div class="formula-hero">
+    $$x^tAx \;=\; x^t(ww^t)x \;=\; (w^tx)^2 \;=\; \lambda\,(q^tx)^2 \;\ge\; 0$$
+  </div>
+  <div class="box thm">
+    <span class="box-label">Three equivalent forms</span>
+    <p>$x^tAx = x^tS(A)x = (w^tx)^2 = \lambda(q^tx)^2$</p>
+    <p style="margin-top:8px;">An almost skew-symmetric matrix, however large its spin $K(A)$, is analytically no richer than a rank-one projection. One number $\lambda$ and one direction $q$ capture <em>everything</em>.</p>
+  </div>
+  <div class="qa" style="margin-top:4px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Think about it</strong>
+        For which vectors $x$ is $x^tAx = 0$? What is the dimension of this zero set?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> $(w^tx)^2=0 \iff w^tx=0 \iff x\perp w$. The zero set is $w^\perp = N(S(A))$, a hyperplane of dimension $n-1$. The form is strictly positive only in the direction of $w$ (and its negative).</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 5 — OUTER PRODUCT THEOREM ══════════════ -->
+<section class="slide" id="s5">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 5 · Supporting theorem</div>
+  <h2>When is a rank-one matrix an outer product $vv^t$?</h2>
+  <div class="qa" style="margin-bottom:14px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Warm-up</strong>
+        Is $A = \begin{pmatrix}-1&0\\0&0\end{pmatrix}$ writable as $vv^t$ for a real vector $v$? Why or why not?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> No. The $(1,1)$ entry would need $v_1^2 = -1$, impossible over $\mathbb{R}$. $A$ is symmetric and rank-1 but has a <em>negative</em> eigenvalue $-1$. Positive semidefiniteness is the missing hypothesis.</p>
+    </div>
+  </div>
+  <div class="box thm">
+    <span class="box-label">Theorem — outer-product characterization</span>
+    <p>$A = vv^t$ for some nonzero real $v$ $\iff$ $A$ is <strong>symmetric</strong>, <strong>PSD</strong>, and <strong>rank-one</strong>.</p>
+  </div>
+  <details class="proof-strip">
+    <summary>Show full proof</summary>
+    <div class="inner">
+      <p><strong>($\Rightarrow$)</strong> $(vv^t)^t=vv^t$ ✓; $(v^tx)^2\ge0$ ✓; columns are $v_j v$, so rank = 1 ✓.</p>
+      <p style="margin-top:8px;"><strong>($\Leftarrow$)</strong> Spectral theorem: $A=\sum\lambda_i q_iq_i^t$. Rank-1 forces exactly one nonzero eigenvalue $\lambda_1\ne0$, so $A=\lambda_1 q_1q_1^t$. PSD: $q_1^tAq_1=\lambda_1\ge0$, and $\lambda_1\ne0$ gives $\lambda_1>0$. Set $v=\sqrt{\lambda_1}\,q_1$; then $vv^t=A$. $\square$</p>
+      <p style="margin-top:8px;"><strong>Uniqueness:</strong> If also $A=uu^t$, then $u=\alpha v$ with $\alpha^2=1$, so $u=\pm v$.</p>
+    </div>
+  </details>
+  <div class="box rem" style="margin-top:6px;">
+    <span class="box-label">Why this matters here</span>
+    <p>$S(A)$ is always symmetric; it is PSD (as $x^tS(A)x=x^tAx=(w^tx)^2\ge0$); when rk$(S(A))=1$ this theorem guarantees a real $w$ with $S(A)=ww^t$.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 6 — DEFINITION ══════════════ -->
+<section class="slide" id="s6">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 6 · Definition</div>
+  <h2>Defining "almost skew-symmetric"</h2>
+  <div class="box def">
+    <span class="box-label">Definition</span>
+    <p>$A\in\mathbb{R}^{n\times n}$, $n\ge2$, is <strong>almost skew-symmetric</strong> if
+    $$\operatorname{rk}(S(A))=1.$$</p>
+  </div>
+  <div class="cols" style="margin-top:6px;">
+    <div class="box rem">
+      <span class="box-label">The sign convention</span>
+      <p>$S(A)=\delta(A)\,vv^t$ for a unit $v$ and real $\delta(A)\ne0$. Since $-A$ has $S(-A)=-S(A)$, we always replace $A$ by $-A$ if needed so that $\delta(A)>0$. Then $S(A)=ww^t$ for a real $w=\sqrt{\delta(A)}\,v$.</p>
+    </div>
+    <div class="box rem">
+      <span class="box-label">Transpose symmetry</span>
+      <p>$S(A^t)=\tfrac12(A^t+(A^t)^t)=S(A)$. So $A$ is almost skew-symmetric <em>exactly when $A^t$ is</em>. The property is shared by a matrix and its transpose.</p>
+    </div>
+  </div>
+  <div class="box ex" style="margin-top:6px;">
+    <span class="box-label">Quick example — $3\times3$</span>
+    <p>Take $w=(1,2,3)^t$. Then $S(A)=ww^t=\begin{pmatrix}1&2&3\\2&4&6\\3&6&9\end{pmatrix}$, rank 1. Add any skew matrix $K$, e.g., with $(1,2)$-entry $+1$:
+    $A=S(A)+K=\begin{pmatrix}1&3&3\\1&4&6\\3&6&9\end{pmatrix}$. Almost skew-symmetric ✓.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 7 — PSD THEOREM ══════════════ -->
+<section class="slide" id="s7">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 7 · First consequence</div>
+  <h2>Positivity — a free gift from the definition</h2>
+  <div class="qa" style="margin-bottom:14px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Prove it</strong>
+        Show that every almost skew-symmetric matrix (with $\delta(A)>0$) is positive semidefinite. Can you write down all three equivalent forms of $x^tAx$?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> From slides 3–4: $x^tAx = x^tS(A)x = (w^tx)^2 = \lambda(q^tx)^2\ge0$ for all $x$. $\square$</p>
+      <p style="margin-top:8px;">Three lines from the decomposition. No eigenvalue computation needed.</p>
+    </div>
+  </div>
+  <div class="box thm">
+    <span class="box-label">Theorem <span class="source">— Theorem 3.2 in source paper</span></span>
+    <p>Every almost skew-symmetric matrix with $\delta(A)>0$ is PSD:
+    $$x^tAx=(w^tx)^2=\lambda(q^tx)^2\ge0.$$</p>
+  </div>
+  <div class="box rem" style="margin-top:6px;">
+    <span class="box-label">Bonus — range-symmetric</span>
+    <p>PSD matrices are always range-symmetric ($R(A)=R(A^t)$). For almost skew-symmetric $A$ this means the Moore–Penrose inverse $A^\dagger$ and the group inverse $A^\#$ coincide — two objects that are generally distinct collapse to one.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 8 — STRUCTURE THEOREM ══════════════ -->
+<section class="slide" id="s8">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 8 · Anatomy</div>
+  <h2>Reading almost skew-symmetry off the entries</h2>
+  <div class="box thm">
+    <span class="box-label">Theorem <span class="source">— Theorem 3.3</span></span>
+    <p>$A=(a_{ij})$ is almost skew-symmetric (with $\delta(A)>0$) $\iff$ all four hold:</p>
+    <p style="margin-top:8px;">(i) $a_{ii}\ge0$ for all $i$; &nbsp; (ii) at least one $a_{ii}>0$;</p>
+    <p>(iii) $a_{ii}=0 \Rightarrow a_{ik}+a_{ki}=0\ \forall k$;</p>
+    <p>(iv) $a_{ii}\ne0$, $a_{jj}\ne0$ $\Rightarrow$ $\exists\, k$ with $k^2=a_{jj}/a_{ii}$ and $a_{ij}+a_{ji}=2k\,a_{ii}$.</p>
+  </div>
+  <div class="qa" style="margin-top:6px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Check it</strong>
+        For the matrix $A=\begin{pmatrix}1&3&3\\1&4&6\\3&6&9\end{pmatrix}$, verify condition (iv) for the pair $(i,j)=(1,2)$.
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> $a_{11}=1$, $a_{22}=4$. Then $k^2=4/1=4$, so $k=2$. Check: $a_{12}+a_{21}=3+1=4=2k\cdot a_{11}=2(2)(1)=4$. ✓</p>
+      <p style="margin-top:6px;">Similarly for all other pairs — this is the $w=(1,2,3)^t$ example, so $k_{ij}=w_j/w_i$.</p>
+    </div>
+  </div>
+  <div class="box rem" style="margin-top:6px;">
+    <span class="box-label">Key ratio constraint</span>
+    <p>Whenever both $a_{ii},a_{jj}\ne0$: $(a_{ij}+a_{ji})^2 = 4\,a_{ii}\,a_{jj}$. The diagonal determines the symmetric off-diagonal pairs up to a sign choice.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 9 — BUILDING & FRAGILITY ══════════════ -->
+<section class="slide" id="s9">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 9 · Examples</div>
+  <h2>Building examples — and why the property is fragile</h2>
+  <div class="cols">
+    <div>
+      <h3>Recipe</h3>
+      <p style="margin-top:8px; font-size:.93rem;">Pick any $w\in\mathbb{R}^n$, $w\ne0$. Set $S(A)=ww^t$. Add any skew-symmetric $K$. Result: $A=ww^t+K$ is almost skew-symmetric.</p>
+      <div class="box ex" style="margin-top:10px;">
+        <span class="box-label">Example — $w=(1,2,3)^t$</span>
+        <p style="font-size:.88rem;">Diagonal: $(1,4,9)$. Sign choices: $k_1=2$, $k_2=3$. Any skew $K$ works.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Fragility</h3>
+      <p style="margin-top:8px; font-size:.93rem;">The set $\mathcal{A}_n$ is <strong>not closed</strong> and <strong>not closed under addition</strong>.</p>
+      <div class="box ex" style="margin-top:10px;">
+        <span class="box-label">Not closed</span>
+        <p style="font-size:.88rem;">$A_m=\operatorname{diag}(1/m,0)\in\mathcal{A}_2$ but $A_m\to0\notin\mathcal{A}_2$.</p>
+      </div>
+      <div class="box ex" style="margin-top:8px;">
+        <span class="box-label">Not additive</span>
+        <p style="font-size:.88rem;">$\operatorname{diag}(1,0),\operatorname{diag}(0,1)\in\mathcal{A}_2$ but their sum is $I$ with $\operatorname{rk}(S(I))=2\ne1$.</p>
+      </div>
+    </div>
+  </div>
+  <div class="qa" style="margin-top:8px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Think about it</strong>
+        Why exactly does $\operatorname{diag}(1,0)+\operatorname{diag}(0,1)=I$ fail? What condition from slide 8 does it violate?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> For $I$, all $a_{ii}=1>0$, so condition (iv) requires $a_{ij}+a_{ji}=2k\cdot1$ for some $k$ with $k^2=1$. But the off-diagonal entries of $I$ are zero: $0+0=0\ne\pm2$. Condition (iv) is violated. Alternatively: $S(I)=I$ has rank $n\ne1$.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 10 — ARITHMETIC ══════════════ -->
+<section class="slide" id="s10">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 10 · Arithmetic</div>
+  <h2>When do sums and differences stay almost skew-symmetric?</h2>
+  <p style="font-size:.93rem;">Let $A,B\in\mathcal{A}_n$ with $S(A)=uu^t$, $S(B)=ww^t$.</p>
+  <div class="qa" style="margin-top:6px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Conjecture then prove</strong>
+        When is $A+B$ almost skew-symmetric? Can the defect vectors ever "cancel"?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> $S(A+B)=uu^t+ww^t$. This has rank 1 iff $u$ and $w$ are <strong>linearly dependent</strong>. If $w=\alpha u$: $S(A+B)=(1+\alpha^2)uu^t$, rank 1 since $1+\alpha^2>0$ always — sums <em>cannot</em> cancel the defect. $\square$</p>
+    </div>
+  </div>
+  <div class="box thm" style="margin-top:8px;">
+    <span class="box-label">Theorem 3.4 &amp; Corollaries</span>
+    <p><strong>Sum:</strong> $A+B\in\mathcal{A}_n$ $\iff$ $u\parallel w$ $\iff$ $\operatorname{diag}(A)$ and $\operatorname{diag}(B)$ are proportional.</p>
+    <p style="margin-top:6px;"><strong>Difference:</strong> $A-B\in\mathcal{A}_n$ $\iff$ $u\parallel w$ <em>and</em> $u\ne\pm w$. When $w=\pm u$, the symmetric parts cancel exactly and $A-B$ degenerates to skew-symmetric.</p>
+  </div>
+  <div class="box rem" style="margin-top:6px;">
+    <span class="box-label">The diagonal test (Corollary 3.1)</span>
+    <p>$A+B\in\mathcal{A}_n$ iff $\operatorname{diag}(A)$ and $\operatorname{diag}(B)$ are linearly dependent as vectors in $\mathbb{R}^n$ — a condition readable directly from the entries.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 11 — SUBDIRECT SUMS ══════════════ -->
+<section class="slide" id="s11">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 11 · Assembly</div>
+  <h2>Subdirect sums — overlapping two matrices</h2>
+  <div class="box def">
+    <span class="box-label">Definition — $k$-subdirect sum</span>
+    <p>For $A\in\mathbb{R}^{m\times m}$ and $B\in\mathbb{R}^{n\times n}$, partitioned so $A_{22}$ and $B_{11}$ are both $k\times k$:
+    $$A\oplus_k B = \begin{pmatrix}A_{11}&A_{12}&0\\A_{21}&A_{22}+B_{11}&B_{12}\\0&B_{21}&B_{22}\end{pmatrix}.$$
+    The blocks overlap and add at the seam.</p>
+  </div>
+  <div class="qa" style="margin-top:8px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Predict</strong>
+        What conditions on $A$ and $B$ make $A\oplus_k B$ almost skew-symmetric? Think about where the diagonal nonzero entries can live.
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> <strong>Theorem 3.5:</strong> $A\oplus_k B\in\mathcal{A}_{m+n-k}$ iff</p>
+      <p style="margin:6px 0 0 16px;">(i) $\operatorname{diag}(A_{11})=0$ and $\operatorname{diag}(B_{22})=0$ — the "outer" diagonals vanish;</p>
+      <p style="margin:4px 0 0 16px;">(ii) $\operatorname{diag}(A_{22})$ and $\operatorname{diag}(B_{11})$ are proportional — the "overlap" diagonals align.</p>
+      <p style="margin-top:8px;">Intuition: two independent nonzero diagonal blocks would force rk$(S)\ge2$.</p>
+    </div>
+  </div>
+  <div class="box rem" style="margin-top:8px;">
+    <span class="box-label">Converse — Theorem 3.6</span>
+    <p>Any almost skew-symmetric matrix with a block-tridiagonal zero-corner pattern decomposes as a subdirect sum of two almost skew-symmetric matrices (or one almost skew-symmetric + one skew-symmetric).</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 12 — PARTITION BY SKEW RANK ══════════════ -->
+<section class="slide" id="s12">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 12 · Equivalence I</div>
+  <h2>Partitioning $\mathcal{A}_n$ by the amount of spin</h2>
+  <p style="font-size:.93rem;">Declare $A\sim B$ if $\operatorname{rk}(K(A))=\operatorname{rk}(K(B))$. This partitions $\mathcal{A}_n$ into classes $\mathcal{A}_n^k$.</p>
+  <div class="qa" style="margin-top:6px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Parity</strong>
+        Which values of $k$ actually occur? Can $\operatorname{rk}(K(A))=1$?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> No — real skew-symmetric matrices always have <strong>even rank</strong>. Nonzero eigenvalues of $K$ come in purely imaginary conjugate pairs $\pm i\lambda_j$, so rank $=2r$ always. The nonempty classes are $\mathcal{A}_n^0,\mathcal{A}_n^2,\mathcal{A}_n^4,\ldots,\mathcal{A}_n^{2\lfloor n/2\rfloor}$.</p>
+    </div>
+  </div>
+  <div class="cols" style="margin-top:8px;">
+    <div class="box def">
+      <span class="box-label">Class $\mathcal{A}_n^0$ — pure stretch</span>
+      <p>$K(A)=0$, so $A=S(A)=ww^t$. Exactly the rank-1 PSD symmetric matrices. As a manifold: $\mathbb{R}_{>0}\times\mathbb{R}P^{n-1}$, dimension $n$.</p>
+    </div>
+    <div class="box def">
+      <span class="box-label">Class $\mathcal{A}_n^2$ — one spin plane</span>
+      <p>$A=ww^t+uv^t-vu^t$ for nonzero $w$ and linearly independent $u,v$. The simplest "mixed" class; first appears at $n=2$.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 13 — 6×6 EXAMPLES ══════════════ -->
+<section class="slide" id="s13">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 13 · Worked examples</div>
+  <h2>Six-by-six: one matrix from each nonempty class</h2>
+  <p style="font-size:.9rem; margin-bottom:10px;">All use $w=(1,1,1,1,1,1)^t$, so $S(A)=J_6$. Only $K(A)$ changes. Write $K_{ij}=e_ie_j^t-e_je_i^t$.</p>
+  <table class="data-table">
+    <thead><tr><th>Class</th><th>$K(A)$</th><th>Changed entries vs $J_6$</th><th>rk$(K)$</th><th>Nonempty?</th></tr></thead>
+    <tbody>
+      <tr><td>$\mathcal{A}_6^0$</td><td>$0$</td><td>$A=J_6$</td><td>0</td><td><span class="badge yes">Yes</span></td></tr>
+      <tr><td>$\mathcal{A}_6^1$</td><td>—</td><td>—</td><td>1</td><td><span class="badge no">Empty</span></td></tr>
+      <tr><td>$\mathcal{A}_6^2$</td><td>$K_{12}$</td><td>$(1,2)\to2,\;(2,1)\to0$</td><td>2</td><td><span class="badge yes">Yes</span></td></tr>
+      <tr><td>$\mathcal{A}_6^3$</td><td>—</td><td>—</td><td>3</td><td><span class="badge no">Empty</span></td></tr>
+      <tr><td>$\mathcal{A}_6^4$</td><td>$K_{12}+K_{34}$</td><td>above + $(3,4)\to2,\;(4,3)\to0$</td><td>4</td><td><span class="badge yes">Yes</span></td></tr>
+      <tr><td>$\mathcal{A}_6^5$</td><td>—</td><td>—</td><td>5</td><td><span class="badge no">Empty</span></td></tr>
+      <tr><td>$\mathcal{A}_6^6$</td><td>$K_{12}+K_{34}+K_{56}$</td><td>above + $(5,6)\to2,\;(6,5)\to0$</td><td>6</td><td><span class="badge yes">Yes</span></td></tr>
+    </tbody>
+  </table>
+  <div class="box rem" style="margin-top:10px;">
+    <span class="box-label">Pattern</span>
+    <p>Each new spin plane adds one independent $2\times2$ rotation block $\begin{pmatrix}0&1\\-1&0\end{pmatrix}$. Three such blocks fill all of $\mathbb{R}^6$, reaching the maximum possible skew rank of 6.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 14 — DIAGONAL CLASSIFICATION ══════════════ -->
+<section class="slide" id="s14">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 14 · Equivalence II</div>
+  <h2>Classifying by nonzero diagonal count</h2>
+  <div class="box thm">
+    <span class="box-label">Key observation</span>
+    <p>$K(A)_{ii}=(a_{ii}-a_{ii})/2=0$ always, so $a_{ii}=S(A)_{ii}=w_i^2\ge0$. The number of nonzero diagonal entries equals $|\operatorname{supp}(w)|\in\{1,\ldots,n\}$.</p>
+  </div>
+  <p style="margin-top:8px; font-size:.93rem;">Declare $A\sim B$ if they have the same number of nonzero diagonal entries. This gives exactly $n$ nonempty classes $D_1,\ldots,D_n$.</p>
+  <div class="cols" style="margin-top:6px;">
+    <div class="box def">
+      <span class="box-label">Class $D_1$ — one spike</span>
+      <p style="font-size:.9rem;">Exactly one nonzero $a_{pp}$. Then $S(A)=a_{pp}e_pe_p^t$, so $a_{ij}+a_{ji}=0$ for <em>all</em> $i\ne j$. The matrix is antisymmetric in every off-diagonal pair — the nearest neighbour of skew-symmetric matrices in $\mathcal{A}_n$.</p>
+    </div>
+    <div class="box def">
+      <span class="box-label">Class $D_n$ — fully supported</span>
+      <p style="font-size:.9rem;">All diagonal entries nonzero. Generic case. The ratio constraint $(a_{ij}+a_{ji})^2=4a_{ii}a_{jj}$ holds for every pair; $S(A)$ is fully determined by the diagonal up to a sign per pair.</p>
+    </div>
+  </div>
+  <div class="qa" style="margin-top:8px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Combine both equivalences</strong>
+        Are $\mathcal{A}_n^{2r}$ (spin rank) and $D_k$ (diagonal support) independent? What does $\mathcal{A}_n^0\cap D_k$ contain?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> Yes — for any valid $2r\le n$ and $k\in\{1,\ldots,n\}$, take $A=ww^t+K$ where $\operatorname{supp}(w)$ has size $k$ and $\operatorname{rk}(K)=2r$. The two parameters are independent, giving at most $\lfloor n/2\rfloor\cdot n$ nonempty cells. $\mathcal{A}_n^0\cap D_k$ contains all symmetric rank-1 matrices with exactly $k$ nonzero diagonal entries — parametrized by the $\binom{n}{k}$ support subsets.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 15 — BOOLEAN CASE ══════════════ -->
+<section class="slide" id="s15">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 15 · Combinatorial interlude</div>
+  <h2>Restricting to $\{0,1\}$ entries</h2>
+  <div class="box thm">
+    <span class="box-label">Theorem — Boolean characterization</span>
+    <p>$A$ is $n\times n$ with entries in $\{0,1\}$ and almost skew-symmetric $\iff$ there exists nonempty $U\subseteq[n]$ with $A=\mathbf{1}_U\mathbf{1}_U^t$ (the indicator matrix of $U\times U$). There are exactly $2^n-1$ such matrices — one per nonempty subset.</p>
+  </div>
+  <div class="qa" style="margin-top:8px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Trace the proof</strong>
+        Why must all nonzero entries of the defect vector $w$ have the <em>same sign</em>?
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> $w_i^2=a_{ii}\in\{0,1\}$ gives $w_i\in\{0,\pm1\}$. Off-diagonal: $w_iw_j=S(A)_{ij}\in\{0,\frac12,1\}$. But $w_iw_j=-1$ if $w_i$ and $w_j$ have opposite signs — and $-1\notin\{0,\frac12,1\}$. Contradiction. So all nonzero $w_i$ share the same sign. Taking them positive gives $w=\mathbf{1}_U$.</p>
+    </div>
+  </div>
+  <div class="box rem" style="margin-top:8px;">
+    <span class="box-label">Connection to $\mathcal{A}_n^0\cap D_k$</span>
+    <p>Every 0,1 almost skew-symmetric matrix is symmetric ($A_{ij}=A_{ji}$), so $K(A)=0$ — all $2^n-1$ matrices lie in $\mathcal{A}_n^0$. The $\binom{n}{k}$ matrices with $|U|=k$ occupy $\mathcal{A}_n^0\cap D_k$.</p>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 16 — TWO-VALUE CASE ══════════════ -->
+<section class="slide" id="s16">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 16 · Two-value generalisation</div>
+  <h2>Entries from $\{a,b\}$ — a dramatic collapse</h2>
+  <p style="font-size:.93rem;">Any matrix $M$ with entries in $\{a,b\}$ writes uniquely as $M=aJ+(b-a)A$ where $A$ is the 0,1 indicator matrix of the $b$-positions. Taking symmetric parts: $S(M)=a\mathbf{1}\mathbf{1}^t+(b-a)S(A)$.</p>
+  <div class="qa" style="margin-top:8px;">
+    <div class="qa-question">
+      <div class="qa-q-icon">Q</div>
+      <div class="qa-q-text">
+        <strong>Predict</strong>
+        If $a\ne0$, how many matrices with entries in $\{a,b\}$ are almost skew-symmetric? Make a guess before revealing.
+      </div>
+    </div>
+    <button class="qa-reveal-btn" onclick="toggleQA(this)">Show solution ↓</button>
+    <div class="qa-answer">
+      <p><span class="qa-a-icon">A</span> Exactly <strong>2</strong>: the constant matrices $aJ$ and $bJ$ (provided $b\ne0$; if $b=0$ just $aJ$). <em>No mixed matrix is almost skew-symmetric when $a\ne0$.</em></p>
+      <p style="margin-top:6px;">Proof sketch: rk$(S(A))=1$ requires $\mathbf{1}$ and $\mathbf{1}_U$ to be proportional (sum theorem), forcing $U=[n]$, giving $M=bJ$. Or $A=0$, giving $M=aJ$. All other cases have rk$(S(M))\ge2$.</p>
+    </div>
+  </div>
+  <table class="data-table" style="margin-top:10px;">
+    <thead><tr><th>Alphabet</th><th>Count</th><th>Matrices</th></tr></thead>
+    <tbody>
+      <tr><td>$\{0,b\}$</td><td>$2^n-1$</td><td>$b\cdot\mathbf{1}_U\mathbf{1}_U^t$, all nonempty $U$</td></tr>
+      <tr><td>$\{a,b\}$, $a\ne0\ne b$</td><td>$2$</td><td>$aJ$ and $bJ$ only</td></tr>
+      <tr><td>$\{1,2\}$ ($n=3$)</td><td>$2$</td><td>$J$ and $2J$</td></tr>
+      <tr><td>$\{5,6\}$ ($n=3$)</td><td>$2$</td><td>$5J$ and $6J$</td></tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 17 — QUADRATIC FORM REVIEW ══════════════ -->
+<section class="slide" id="s17">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 17 · Review</div>
+  <h2>The central chain — everything flows from one identity</h2>
+  <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+    <div class="box thm" style="display:flex;align-items:center;gap:14px;">
+      <span style="font-size:1.6rem;color:var(--teal);font-family:'JetBrains Mono',monospace;flex-shrink:0;">1</span>
+      <div><strong>Decomposition:</strong> $A=S(A)+K(A)$ uniquely. $K(A)$ has zero diagonal, zero quadratic form.</div>
+    </div>
+    <div class="box thm" style="display:flex;align-items:center;gap:14px;">
+      <span style="font-size:1.6rem;color:var(--teal);font-family:'JetBrains Mono',monospace;flex-shrink:0;">2</span>
+      <div><strong>Reduction:</strong> $x^tAx=x^tS(A)x$ for all $x$. The skew part is analytically inert.</div>
+    </div>
+    <div class="box thm" style="display:flex;align-items:center;gap:14px;">
+      <span style="font-size:1.6rem;color:var(--teal);font-family:'JetBrains Mono',monospace;flex-shrink:0;">3</span>
+      <div><strong>Definition:</strong> $A$ almost skew-symmetric $\iff$ rk$(S(A))=1$ $\iff$ $S(A)=ww^t$.</div>
+    </div>
+    <div class="box thm" style="display:flex;align-items:center;gap:14px;">
+      <span style="font-size:1.6rem;color:var(--teal);font-family:'JetBrains Mono',monospace;flex-shrink:0;">4</span>
+      <div><strong>Perfect square:</strong> $x^tAx=(w^tx)^2=\lambda(q^tx)^2\ge0$. Free PSD. Free range-symmetry.</div>
+    </div>
+    <div class="box thm" style="display:flex;align-items:center;gap:14px;">
+      <span style="font-size:1.6rem;color:var(--teal);font-family:'JetBrains Mono',monospace;flex-shrink:0;">5</span>
+      <div><strong>Structure:</strong> Diagonal encodes $w^2$; ratios pin the symmetric off-diagonals; skew part is free.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════ SLIDE 18 — WHAT'S NEXT ══════════════ -->
+<section class="slide" id="s18">
+<div class="slide-inner">
+  <div class="eyebrow">Slide 18 · End of Part I</div>
+  <div class="end-card">
+    <h2>There is more where this came from</h2>
+    <p style="color:var(--muted); margin-top:10px; max-width:560px; margin-left:auto; margin-right:auto;">
+      The source paper goes further. Part II will cover:
+    </p>
+    <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:18px 0;">
+      <div style="background:rgba(0,223,162,.08);border:1px solid var(--teal-dim);border-radius:10px;padding:12px 18px;max-width:200px;text-align:center;">
+        <div style="color:var(--teal);font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">Part II · §4</div>
+        <p style="font-size:.88rem;">Moore–Penrose inverse of almost skew-symmetric matrices — explicit formulas</p>
+      </div>
+      <div style="background:rgba(167,139,250,.08);border:1px solid var(--lav-dim);border-radius:10px;padding:12px 18px;max-width:200px;text-align:center;">
+        <div style="color:var(--lavender);font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">Part II · §5</div>
+        <p style="font-size:.88rem;">Tucker's theorem analogue — sign patterns for almost skew-symmetric matrices</p>
+      </div>
+      <div style="background:rgba(255,183,0,.08);border:1px solid var(--gold-dim);border-radius:10px;padding:12px 18px;max-width:200px;text-align:center;">
+        <div style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;">Part II · §6</div>
+        <p style="font-size:.88rem;">A new proof of Farkas' lemma via almost skew-symmetric matrices</p>
+      </div>
+    </div>
+    <p class="cite">
+      P. N. Choudhury, K. C. Sivakumar — <em>Tucker's theorem for almost skew-symmetric matrices and a proof of Farkas' lemma</em> — Linear Algebra and its Applications 482 (2015), 55–69.
+      doi:10.1016/j.laa.2015.05.019
+    </p>
+  </div>
+</div>
+</section>
+
+</div><!-- /#deck -->
+
+<!-- ── navigation ──────────────────────────────── -->
+<nav id="nav">
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)" disabled>‹</button>
+  <div class="dot-row" id="dots"></div>
+  <span id="counter">1 / 18</span>
+  <button class="nav-btn" id="nextBtn" onclick="go(1)">›</button>
+</nav>
+
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+const N = slides.length;
+let cur = 0;
+
+// build dots
+const dotRow = document.getElementById('dots');
+slides.forEach((_,i)=>{
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' active':'');
+  d.onclick = ()=> goTo(i);
+  dotRow.appendChild(d);
+});
+
+function goTo(n){
+  if(n<0||n>=N) return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('exit-left');
+  setTimeout(()=> slides[cur].classList.remove('exit-left'), 400);
+  cur = n;
+  slides[cur].classList.add('active');
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.classList.toggle('active', i===cur);
+  });
+  document.getElementById('counter').textContent = (cur+1)+' / '+N;
+  document.getElementById('prevBtn').disabled = cur===0;
+  document.getElementById('nextBtn').disabled = cur===N-1;
+  document.getElementById('progress').style.width = ((cur+1)/N*100)+'%';
+  // scroll slide back to top
+  slides[cur].scrollTop = 0;
+  // re-typeset MathJax
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([slides[cur]]).catch(()=>{});
+  }
+}
+
+function go(dir){ goTo(cur+dir); }
+
+// keyboard
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key===' ') go(1);
+  if(e.key==='ArrowLeft') go(-1);
+});
+
+// Q&A reveal
+function toggleQA(btn){
+  const ans = btn.nextElementSibling;
+  const open = ans.classList.toggle('open');
+  btn.textContent = open ? 'Hide solution ↑' : 'Show solution ↓';
+}
+
+// initial typeset after MathJax loads
+document.addEventListener('DOMContentLoaded', ()=>{
+  if(window.MathJax && MathJax.startup){
+    MathJax.startup.promise.then(()=>{
+      MathJax.typesetPromise([slides[0]]);
+    });
+  }
+});
+
+// init progress
+document.getElementById('progress').style.width = (1/N*100)+'%';
+</script>
+</body>
+</html>
